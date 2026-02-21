@@ -36,3 +36,4 @@ jobs:
 
           git add chart/values.yaml
           git commit -m "🚀 (CD) Update ${{ inputs.image }} to ${{ inputs.tag }}"
+          git push -u origin main
