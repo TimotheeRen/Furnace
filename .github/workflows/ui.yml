@@ -11,6 +11,7 @@ jobs:
     with:
       username: timotheeren
       image: ui
+      path: ui
     secrets:
       dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
