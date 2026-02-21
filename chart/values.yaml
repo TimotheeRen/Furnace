@@ -3,4 +3,4 @@ ui:
   replicaCount: 1
   port: 80
   uiImage: timotheeren/ui
-  uiTag: sha-11a40ea1045d59ff52b78df73c3b5d879cfa3d35
+  uiTag: sha-63b8204e5b3d5ce72f6ac7e4ba44d673e495dcfe
