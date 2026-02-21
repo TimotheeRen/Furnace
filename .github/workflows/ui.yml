@@ -1,0 +1,16 @@
+name: UI
+
+on:
+  push:
+    paths:
+      - 'ui/**'
+
+jobs:
+  call-workflow-passing-data:
+    uses: timotheeren/Furnace/.github/workflows/ci.yml@main
+    with:
+      username: timotheeren
+      image: ui
+    secrets:
+      dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
+      dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
