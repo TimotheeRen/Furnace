@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: ui
-          image: timotheeren/ui:latest
+          image: '{{ .Values.ui.uiImage }}:{{ .Values.ui.uiTag }}'
           env:
             - name: HOSTNAME
               value: "0.0.0.0" 

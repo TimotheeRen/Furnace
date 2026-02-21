@@ -8,12 +8,21 @@ on:
     
 
 jobs:
-  call-workflow-passing-data:
+  ci:
     uses: timotheeren/Furnace/.github/workflows/ci.yml@main
     with:
       username: timotheeren
-      image: ui
-      path: ui
+      image: "ui"
+      path: "ui"
     secrets:
       dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
+  
+  cd:
+    needs: ci
+    uses: timotheeren/Furnace/.github/workflows/cd.yml@main
+    with:
+      image: "ui"
+      tag: "sha-${{ github.sha }}"
+    secrets:
+      token: ${{ secrets.PAT }}
