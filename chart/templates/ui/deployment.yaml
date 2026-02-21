@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ui
+  namespace: {{ .Values.ui.namespace }}
+  labels:
+    app: ui
+spec:
+  replicas: {{ .Values.ui.replicaCount }}
+  selector:
+    matchLabels:
+      app: ui
+  template:
+    metadata:
+      labels:
+        app: ui
+    spec:
+      containers:
+        - name: ui
+          image: timotheeren/ui:latest
+          env:
+            - name: HOSTNAME
+              value: "0.0.0.0" 
+            - name: PORT
+              value: "3000"

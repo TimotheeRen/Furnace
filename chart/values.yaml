@@ -1,0 +1,4 @@
+ui:
+  namespace: default
+  replicaCount: 1
+  port: 80
