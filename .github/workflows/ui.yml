@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - 'ui/**'
+  workflow_dispatch:
+    
 
 jobs:
   call-workflow-passing-data:
