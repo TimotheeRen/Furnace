@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.api.name }}
+  namespace: {{ .Values.api.namespace }}
+  labels:
+    app: {{ .Values.api.name }}
+spec:
+  replicas: {{ .Values.api.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.api.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.api.name }}
+    spec:
+      containers:
+        - name: "{{ .Values.api.name }}-container"
+          image: '{{ .Values.api.apiImage }}:{{ .Values.api.apiTag }}'
+          env:
+            - name: HOSTNAME
+              value: "0.0.0.0" 
+            - name: PORT
+              value: {{ .Values.api.port | quote }}

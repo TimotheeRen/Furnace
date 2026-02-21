@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ui
+  name: {{ .Values.ui.name }}
   namespace: {{ .Values.ui.namespace }}
   labels:
-    app: ui
+    app: {{ .Values.ui.name }}
 spec:
   replicas: {{ .Values.ui.replicaCount }}
   selector:
     matchLabels:
-      app: ui
+      app: {{ .Values.ui.name }}
   template:
     metadata:
       labels:
-        app: ui
+        app: {{ .Values.ui.name }}
     spec:
       containers:
-        - name: ui
+        - name: "{{ .Values.ui.name }}-container"
           image: '{{ .Values.ui.uiImage }}:{{ .Values.ui.uiTag }}'
           env:
             - name: HOSTNAME

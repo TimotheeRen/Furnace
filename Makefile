@@ -7,5 +7,5 @@ reset:
 install:
 	helm upgrade --install furnace chart/ --wait
 
-forward:
+forward: # (dev/k3d env)
 	kubectl port-forward svc/ui-service 8080:80
