@@ -14,4 +14,4 @@ api:
   targetPort: 5678
   port: 5678
   apiImage: timotheeren/api
-  apiTag: latest
+  apiTag: sha-3601b9be4a300f0b80b0128bcf5f0e807abaac5b
