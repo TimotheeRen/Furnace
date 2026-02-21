@@ -37,16 +37,13 @@ jobs:
           images: ${{ inputs.username }}/${{ inputs.image }}
           tags: |
             type=ref, event=branch
-            type=sha, format=long, prefix=sha
+            type=sha, format=long, prefix=sha-
 
       - name: Login to DockerHub
         uses: docker/login-action@3227f5311cb93ffd14d13e65d8cc400d30f4dd8a
         with:
           username: ${{ secrets.dockerhub-username }}
           password: ${{ secrets.dockerhub-token }}
-
-      - name: debug
-        run: ls
 
       - name: Build and push
         uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8
