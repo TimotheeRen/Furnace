@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../app/page.tsx"],"sourcesContent":["export default function Home() {\n  return <>\n    <h1>Furnace</h1>\n  </>\n}\n"],"names":[],"mappings":"0TAAe,SAAS,IACtB,MAAO,CAAA,EAAA,EAAA,GAAA,EAAA,EAAA,QAAA,CAAA,UACL,CAAA,EAAA,EAAA,GAAA,EAAC,KAAA,UAAG,aAER"}
