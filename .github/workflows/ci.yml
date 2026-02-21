@@ -27,12 +27,14 @@ jobs:
     steps:
       - name: Checkout folder
         uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        with:
+          path: ${{ inputs.path }}
 
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@a60f0f62b5c12316066c8db464bfb2faafd7907b
         with:
-          image: ${{ inputs.username }}/${{ inputs.image }}
+          images: ${{ inputs.username }}/${{ inputs.image }}
           tags: |
             type=ref, event=branch
             type=sha, format=long, prefix=sha
@@ -42,9 +44,6 @@ jobs:
         with:
           username: ${{ secrets.dockerhub-username }}
           password: ${{ secrets.dockerhub-token }}
-
-      - name: debug
-        run: ls
 
       - name: Build and push
         uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8
