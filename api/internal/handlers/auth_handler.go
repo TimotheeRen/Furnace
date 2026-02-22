@@ -13,11 +13,11 @@ import (
 func Login(c *echo.Context) error {
 	var user dto.UserDTO
 	if err := echo.BindQueryParams(c, &user); err != nil {
-		return c.String(http.StatusBadRequest, "2")
+		return c.String(http.StatusBadRequest, "Bad request.")
 	}
 	
 	if user.Username != "test" && user.Password != "test" {
-		return c.String(http.StatusOK, "1")
+		return c.String(http.StatusUnauthorized, "Wrong username or password.")
 	}
 
 	secretKey := os.Getenv("JWT_SECRET_KEY")
