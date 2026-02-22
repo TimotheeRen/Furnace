@@ -22,7 +22,7 @@ export default function Home() {
       const result = await Login(formData)
 
       if (result === 200) {
-        router.push("/dashbord")
+        router.push("/dashboard")
       } else if (result === 401){
         toast.error("Invalid username or password", {position: "bottom-right"})
       } else if (result === 400){
