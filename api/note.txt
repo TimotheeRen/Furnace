@@ -1,0 +1,2 @@
+╰─ curl -X GET "http://localhost:5678/ping" \
+     -H "Authorization: Bearer [TOKEN]"
