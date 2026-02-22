@@ -13,14 +13,15 @@ async function Login(form) {
     const username = form.get("username");
     const password = form.get("password");
     if (!username || !password) return "missing_fields";
-    const host = "http://localhost:5678";
+    // const host = "http://localhost:5678"
+    const host = "http://api-service.default.svc:5678";
     try {
         const res = await fetch(`${host}/login?username=${username}&password=${password}`);
         if (!res.ok) return "auth_failed";
         const data = await res.text();
         return data;
     } catch (error) {
-        return "network_error";
+        return "-1";
     }
 }
 ;

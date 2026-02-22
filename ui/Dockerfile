@@ -1,7 +1,18 @@
-FROM node:20.9.0-alpine
+FROM node:20-alpine AS builder
+
 WORKDIR /app
-COPY ./.next/standalone/ .
-COPY ./.next/static ./.next/static
-COPY ./public ./public
+COPY package*.json /.
+RUN npm install
+
+COPY . .
 EXPOSE 3000
-ENTRYPOINT ["node", "server.js"]
+RUN npm run build
+
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+COPY --from=builder /app .
+
+EXPOSE 3000
+
+CMD ["npm", "start"]

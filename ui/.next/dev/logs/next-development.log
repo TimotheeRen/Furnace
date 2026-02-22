@@ -1,34 +1,3 @@
-[00:00:00.628] Server  LOG     ✓ Ready in 466ms
-[00:00:05.275] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:05.275] Browser WARN    Image with src "/background.png" has "fill" and parent element with invalid "position". Provided "static" should be one of absolute,fixed,relative.
-[00:00:10.713] Server  LOG     ✓ Compiled in 18ms
-[00:00:11.750] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:11.880] Browser WARN    Image with src "/background.png" has "fill" and parent element with invalid "position". Provided "static" should be one of absolute,fixed,relative.
-[00:01:28.292] Server  ERROR   ⨯ ReferenceError: Toaster is not defined
-[00:01:29.336] Browser ERROR   uncaughtError: ReferenceError: Toaster is not defined
-[00:01:31.972] Server  ERROR   ⨯ ReferenceError: Toadster is not defined
-[00:01:32.187] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:01:32.187] Browser ERROR   uncaughtError: ReferenceError: Toadster is not defined
-[00:01:39.575] Server  LOG     ✓ Compiled in 14ms
-[00:01:39.621] Server  ERROR   ⨯ ReferenceError: Toadster is not defined
-[00:01:39.829] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:01:39.829] Browser ERROR   uncaughtError: ReferenceError: Toadster is not defined
-[00:01:45.216] Server  ERROR   ⨯ ReferenceError: Toadster is not defined
-[00:01:45.417] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:01:45.417] Browser ERROR   uncaughtError: ReferenceError: Toadster is not defined
-[00:02:54.409] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:02:55.292] Browser WARN    Image with src "/background.png" has "fill" and parent element with invalid "position". Provided "static" should be one of absolute,fixed,relative.
-[00:04:00.700] Server  LOG     ✓ Compiled in 21ms
-[00:04:02.131] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:04:02.265] Browser WARN    Image with src "/background.png" has "fill" and parent element with invalid "position". Provided "static" should be one of absolute,fixed,relative.
-[00:08:06.375] Server  LOG     ✓ Compiled in 16ms
-[00:08:20.876] Server  LOG     ✓ Compiled in 15ms
-[00:08:22.224] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:08:22.369] Browser WARN    Image with src "/background.png" has "fill" and parent element with invalid "position". Provided "static" should be one of absolute,fixed,relative.
-[00:10:40.067] Server  LOG     ✓ Compiled in 14ms
-[00:12:55.353] Server  LOG     ✓ Compiled in 17ms
-[00:13:39.017] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:13:39.194] Browser WARN    Image with src "/background.png" has "fill" and parent element with invalid "position". Provided "static" should be one of absolute,fixed,relative.
-[00:13:47.949] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:13:49.896] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:13:50.028] Browser WARN    Image with src "/background.png" has "fill" and parent element with invalid "position". Provided "static" should be one of absolute,fixed,relative.
+[00:00:00.802] Server  LOG     ✓ Ready in 635ms
+[00:00:01.688] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:01.835] Browser WARN    Image with src "/background.png" has "fill" and parent element with invalid "position". Provided "static" should be one of absolute,fixed,relative.

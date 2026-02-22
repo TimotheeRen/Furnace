@@ -23,9 +23,14 @@ export default function Home() {
 
       if (result === "0") {
         router.push("/dashbord")
-      } 
-      else if (result === "1"){
+      } else if (result === "1"){
         toast.error("Invalid username or password", {position: "bottom-right"})
+      } else if (result === "2"){
+        toast.warning("Bad request", {position: "bottom-right"})
+      } else if (result === "-1"){
+        toast.warning("Connection error", {position: "bottom-right"})
+      } else {
+        toast.error("Unexpected error", {position: "bottom-right"})
       }
     })
   }

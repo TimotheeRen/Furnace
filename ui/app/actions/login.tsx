@@ -6,7 +6,8 @@ export async function Login(form: FormData) {
 
   if (!username || !password) return "missing_fields"
 
-  const host = "http://localhost:5678"
+  // const host = "http://localhost:5678"
+  const host = "http://api-service.default.svc:5678"
 
   try {
     const res = await fetch(`${host}/login?username=${username}&password=${password}`)
@@ -16,6 +17,6 @@ export async function Login(form: FormData) {
     const data = await res.text()
     return data 
   } catch (error) {
-    return "network_error"
+    return "-1"
   }
 }
