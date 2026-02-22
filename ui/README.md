@@ -1,1 +1,1 @@
-## NextJS Based UI 
+## NextJS Based UI
