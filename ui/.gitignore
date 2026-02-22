@@ -3,7 +3,7 @@
 # dependencies
 /node_modules
 /.pnp
-/.next/dev/cache
+/.next
 .pnp.*
 .yarn/*
 !.yarn/patches
