@@ -6,17 +6,13 @@ export async function Login(form: FormData) {
 
   if (!username || !password) return "missing_fields"
 
-  // const host = "http://localhost:5678"
-  const host = "http://api-service.default.svc:5678"
+
+  const host = process.env.API_HOST || "http://localhost:5678"
 
   try {
     const res = await fetch(`${host}/login?username=${username}&password=${password}`)
-    
-    if (!res.ok) return "auth_failed"
-    
-    const data = await res.text()
-    return data 
+    return res.status
   } catch (error) {
-    return "-1"
+    return error
   }
 }

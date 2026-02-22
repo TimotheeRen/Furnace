@@ -21,16 +21,16 @@ export default function Home() {
       }) 
       const result = await Login(formData)
 
-      if (result === "0") {
+      if (result === 200) {
         router.push("/dashbord")
-      } else if (result === "1"){
+      } else if (result === 401){
         toast.error("Invalid username or password", {position: "bottom-right"})
-      } else if (result === "2"){
+      } else if (result === 400){
         toast.warning("Bad request", {position: "bottom-right"})
-      } else if (result === "-1"){
+      } else if (result === 500){
         toast.warning("Connection error", {position: "bottom-right"})
       } else {
-        toast.error("Unexpected error", {position: "bottom-right"})
+        toast.error("Unexpected error: "+result, {position: "bottom-right"})
       }
     })
   }
