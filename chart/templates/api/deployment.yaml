@@ -23,3 +23,7 @@ spec:
               value: "0.0.0.0" 
             - name: PORT
               value: {{ .Values.api.port | quote }}
+            - name: PORT
+              value: {{ .Values.api.port | quote }}
+            - name: REDIS_HOSY
+              value: {{ .Values.api.redisHost | quote }}

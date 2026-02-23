@@ -24,4 +24,4 @@ spec:
             - name: PORT
               value: "3000"
             - name: API_HOST
-              value: "http://api-service.default.svc.cluster.local:5678"
+              value: {{ .Values.ui.apiHost | quote }}
