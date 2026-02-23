@@ -6,7 +6,7 @@ ui:
   port: 80
   uiImage: timotheeren/ui
   uiTag: sha-ba025d92ce0963aa1d979a1ad6418eee6ad3ab30
-  apiHost: http://api-service.default.svc.cluster.local:5678
+  apiHost: http://api-service:5678
 
 api:
   name: api
@@ -16,4 +16,4 @@ api:
   port: 5678
   apiImage: timotheeren/api
   apiTag: sha-ba025d92ce0963aa1d979a1ad6418eee6ad3ab30
-  redisHost: http://redis-service.default.svc.cluster.local:6379
+  redisHost: redis-service:6379
