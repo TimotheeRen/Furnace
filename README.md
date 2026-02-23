@@ -1,2 +1,2 @@
 # Furnace
-A Kubernetes based Minecraft servers hosting solution
+A Kubernetes based Minecraft servers hosting solution.
