@@ -37,19 +37,10 @@ func Login(c *echo.Context) error {
 
 	ctx := context.Background()
 
-	streamKey := "events"
-	args := &redis.XAddArgs{
-		Stream: streamKey,
-		Values: map[string]interface{}{
-			"action": "getSecret",
-			"time": time.Now().Format(time.RFC3339),
-		},
-	}
-	res, err := rdb.XAdd(ctx, args).Result()
-	if err != nil {
-		return c.String(http.StatusInternalServerError, "Redis connection failed")
-	}
-	fmt.Println(res)
+	// requestID := fmt.Sprintf("req_%d", time.Now().UnixNano())
+	rdb.LPush(ctx, "getSecret", "")
+	res, _ := rdb.BRPop(ctx, 3*time.Second, "getSecretResponse").Result()
+	fmt.Println(res[1])
 
 	if user.Username != "test" && user.Password != "test" {
 		return c.String(http.StatusUnauthorized, "Wrong username or password.")
