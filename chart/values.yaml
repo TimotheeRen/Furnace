@@ -17,3 +17,12 @@ api:
   apiImage: timotheeren/api
   apiTag: sha-dc50355b154bed15b92a2e64822db228b41f04fd
   redisHost: redis-service:6379
+
+server:
+  name: server
+  namespace: default
+  replicaCount: 1
+  targetPort: 5678
+  port: 5678
+  serverImage: timotheeren/server
+  serverTag: latest

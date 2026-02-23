@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.server.name }}
+  namespace: {{ .Values.server.namespace }}
+  labels:
+    app: {{ .Values.server.name }}
+spec:
+  replicas: {{ .Values.server.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.server.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.server.name }}
+    spec:
+      containers:
+        - name: "{{ .Values.server.name }}-container"
+          image: '{{ .Values.server.serverImage }}:{{ .Values.server.serverTag }}'
+          env:
+            - name: HOSTNAME
+              value: "0.0.0.0" 
+            - name: PORT
+              value: {{ .Values.server.port | quote }}
+            - name: REDIS_HOST
+              value: {{ .Values.server.redisHost | quote }}
