@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/client/config"
 )
 
 func main() {
@@ -24,6 +26,16 @@ func main() {
 
 	ctx := context.Background()
 
+	cfg, err := config.GetConfig()
+	if err != nil {
+		panic(err)
+	}
+
+	client, err := client.New(cfg, client.Options{})
+	if err != nil {
+		panic(err)
+	}
+
 	for {
 		task, err := rdb.BRPop(ctx, 0, "getSecret").Result()
 		if err != nil {
@@ -33,7 +45,7 @@ func main() {
 		}
 		switch task[0] {
 			case "getSecret":
-				handlers.GetSecret(ctx, rdb, task[1])
+				handlers.GetSecret(ctx, rdb, client, task[1])
 		}
 	}
 }
