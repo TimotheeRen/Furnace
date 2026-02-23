@@ -23,6 +23,7 @@ func main() {
 
 	config := echojwt.Config{
 		SigningKey: secret,
+		TokenLookup: "header:Authorization:Bearer ,cookie:session_token",	
 	}
 	logged := e.Group("")
 	logged.Use(echojwt.WithConfig(config))
