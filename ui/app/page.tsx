@@ -16,9 +16,6 @@ export default function Home() {
 
   const handleForm = (formData: FormData) => {
     startTransition(async () => {
-      toast.promise(Login(formData), {
-        loading: "Connection to Furnace..."
-      }) 
       const result = await Login(formData)
 
       if (result === 200) {
