@@ -1,10 +1,5 @@
 package dto
 
-type UserDTO struct {
-	Username string `query:"username"`
-	Password string `query:"password"`
-}
-
 type SecretDTO struct {
 	Username string `json:"username"`
 	Password string `json:"password"`

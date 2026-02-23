@@ -3,6 +3,7 @@ package handlers
 import (
 	"api/internal/dto"
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
@@ -37,12 +38,16 @@ func Login(c *echo.Context) error {
 
 	ctx := context.Background()
 
-	// requestID := fmt.Sprintf("req_%d", time.Now().UnixNano())
 	rdb.LPush(ctx, "getSecret", "")
 	res, _ := rdb.BRPop(ctx, 3*time.Second, "getSecretResponse").Result()
-	fmt.Println(res[1])
+	var credentials dto.SecretDTO
+	if err := json.Unmarshal([]byte(res[1]), &credentials); err != nil {
+		fmt.Println(err)
+	}
 
-	if user.Username != "test" || user.Password != "test" {
+	fmt.Println(credentials)
+
+	if user.Username != credentials.Username || user.Password != credentials.Password {
 		return c.String(http.StatusUnauthorized, "Wrong username or password.")
 	}
 

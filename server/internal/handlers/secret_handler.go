@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"context"
+	"encoding/json"
+	"server/internal/dto"
 	"time"
 
 	corev1 "k8s.io/api/core/v1"
@@ -22,10 +24,15 @@ func GetSecret(ctx context.Context, rdb *redis.Client, client client.Client, pay
 	if err != nil {
 		rdb.LPush(ctx, "getSecretResponse", "ERROR")
 	}
-	
-	username := string(secret.Data["username"])
-	password := string(secret.Data["password"])
 
-	rdb.LPush(ctx, "getSecretResponse", username+" | "+password)
+	
+	userSecret := dto.SecretDTO{
+		Username: string(secret.Data["username"]),
+		Password: string(secret.Data["password"]),
+	}
+
+	userSecretJson, _ := json.Marshal(userSecret)
+
+	rdb.LPush(ctx, "getSecretResponse", userSecretJson)
 	rdb.Expire(ctx, "getSecretResponse", 3*time.Second)
 }
