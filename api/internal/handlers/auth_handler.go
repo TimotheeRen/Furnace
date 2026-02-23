@@ -42,7 +42,7 @@ func Login(c *echo.Context) error {
 	res, _ := rdb.BRPop(ctx, 3*time.Second, "getSecretResponse").Result()
 	fmt.Println(res[1])
 
-	if user.Username != "test" && user.Password != "test" {
+	if user.Username != "test" || user.Password != "test" {
 		return c.String(http.StatusUnauthorized, "Wrong username or password.")
 	}
 
