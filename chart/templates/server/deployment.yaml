@@ -15,6 +15,7 @@ spec:
       labels:
         app: {{ .Values.server.name }}
     spec:
+      serviceAccountName: server-account
       containers:
         - name: "{{ .Values.server.name }}-container"
           image: '{{ .Values.server.serverImage }}:{{ .Values.server.serverTag }}'

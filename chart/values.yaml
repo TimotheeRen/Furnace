@@ -1,3 +1,7 @@
+credentials:
+  username: admin
+  password: furnace
+
 ui:
   name: ui
   namespace: default
