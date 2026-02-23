@@ -25,4 +25,4 @@ server:
   targetPort: 5678
   port: 5678
   serverImage: timotheeren/server
-  serverTag: latest
+  serverTag: sha-9e33625ead015bb34a0162c172a01dd14b484045
