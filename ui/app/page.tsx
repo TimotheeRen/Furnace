@@ -40,6 +40,7 @@ export default function Home() {
       <Image 
         src="/background.png" 
         alt="Background" 
+        unoptimized
         fill 
         className="fixed opacity-70 blur-sm -z-10"
       />
