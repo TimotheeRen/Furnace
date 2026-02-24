@@ -12,6 +12,8 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
+RUN apk add --no-cache libc6-compat
+
 COPY --from=builder /app ./
 
 EXPOSE 3000
