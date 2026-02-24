@@ -1,0 +1,25 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: manager-role
+rules:
+- apiGroups:
+  - furnace.com
+  resources:
+  - servers
+  verbs: ["create", "delete", "get", "list", "patch", "update", "watch"]
+- apiGroups:
+  - furnace.com
+  resources:
+  - servers/finalizers
+  verbs: ["update"]
+- apiGroups:
+  - furnace.com
+  resources:
+  - servers/status
+  verbs: ["get", "patch", "update"]
+- apiGroups:
+  - apps
+  resources:
+  - statefulsets
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]

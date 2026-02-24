@@ -31,3 +31,10 @@ server:
   serverImage: timotheeren/server
   serverTag: sha-a841cd2b2aa50d603945d63319f7cda8a2343d7f
   redisHost: redis-service:6379
+
+operator:
+  name: operator
+  namespace: system
+  replicaCount: 1
+  operatorImage: timotheeren/operator
+  operatorTag: latest

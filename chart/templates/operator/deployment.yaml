@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.operator.name }}
+  namespace: {{ .Values.operator.namespace }}
+  labels:
+    app: {{ .Values.operator.name }}
+spec:
+  replicas: {{ .Values.operator.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.operator.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.operator.name }}
+    spec:
+      serviceAccountName: controller-manager
+      containers:
+        - name: "{{ .Values.operator.name }}-container"
+          image: '{{ .Values.operator.operatorImage }}:{{ .Values.operator.operatorTag }}'
