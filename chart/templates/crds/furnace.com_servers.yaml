@@ -39,6 +39,9 @@ spec:
             properties:
               initContainer:
                 type: string
+              launcherContainer:
+                default: timotheeren/launcher:21
+                type: string
               limitCPU:
                 type: string
               limitMemory:
