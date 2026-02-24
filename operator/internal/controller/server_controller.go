@@ -10,6 +10,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apimachinery/pkg/util/intstr"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -32,16 +33,32 @@ func (r *ServerReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 
 	servers := &furnacecomv1.Server{}
 	err := r.Get(ctx, types.NamespacedName{Name: req.Name, Namespace: req.Namespace}, servers)
-	if err != nil && apierrors.IsNotFound(err) {
-		log.Info("Resource 'Server' not found.")
-		return ctrl.Result{}, nil
+	if err != nil {
+		if apierrors.IsNotFound(err) {
+			return ctrl.Result{}, nil
+		}
+		return ctrl.Result{}, err
+	}
+	svc := &corev1.Service{}
+	serviceName := servers.Name + "-svc"
+	err = r.Get(ctx, types.NamespacedName{Name: serviceName, Namespace: servers.Namespace}, svc)
+	if err != nil {
+		if apierrors.IsNotFound(err) {
+			log.Info("Resource 'Service' not found.")
+			return ctrl.Result{}, r.Create(ctx, r.defineService(servers))
+		}
+		return ctrl.Result{}, err
 	}
 
 	ss := &appsv1.StatefulSet{}
 	err = r.Get(ctx, types.NamespacedName{Name: req.Name, Namespace: req.Namespace}, ss)
 	if err != nil && apierrors.IsNotFound(err) {
 		log.Info("Resource 'StatefulSet' not found.")
-		return ctrl.Result{}, r.Create(ctx, r.defineStatefulSet(servers))
+		err = r.Create(ctx, r.defineStatefulSet(servers))
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+		return ctrl.Result{Requeue: true}, nil
 	}
 
 	updated := false
@@ -96,6 +113,8 @@ func (r *ServerReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 func (r *ServerReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&furnacecomv1.Server{}).
+		Owns(&corev1.Service{}).
+		Owns(&appsv1.StatefulSet{}).
 		Named("server").
 		Complete(r)
 }
@@ -144,6 +163,13 @@ func (r *ServerReconciler) defineStatefulSet(server *furnacecomv1.Server) *appsv
 						{
 							Name:  "server-container",
 							Image: *server.Spec.LauncherContainer,
+							Ports: []corev1.ContainerPort{
+								{
+									Name:          "minecraft",
+									ContainerPort: 25565,
+									Protocol:      corev1.ProtocolTCP,
+								},
+							},
 							VolumeMounts: []corev1.VolumeMount{
 								{
 									Name:      "server-data",
@@ -187,4 +213,28 @@ func (r *ServerReconciler) defineStatefulSet(server *furnacecomv1.Server) *appsv
 		return nil
 	}
 	return ss
+}
+
+func (r *ServerReconciler) defineService(server *furnacecomv1.Server) *corev1.Service {
+	svc := &corev1.Service{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      server.Name + "-svc",
+			Namespace: server.Namespace,
+		},
+		Spec: corev1.ServiceSpec{
+			Selector: map[string]string{"app": server.Name},
+			Ports: []corev1.ServicePort{
+				{
+					Port:       25565,
+					TargetPort: intstr.FromInt(25565),
+				},
+			},
+			Type: corev1.ServiceTypeNodePort,
+		},
+	}
+	err := ctrl.SetControllerReference(server, svc, r.Scheme)
+	if err != nil {
+		return nil
+	}
+	return svc
 }

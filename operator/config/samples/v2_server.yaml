@@ -1,0 +1,14 @@
+apiVersion: furnace.com/v1
+kind: Server
+metadata:
+  labels:
+    app.kubernetes.io/name: operator
+    app.kubernetes.io/managed-by: kustomize
+  name: server-sample-2
+spec:
+  initContainer: "timotheeren/vanilla:1.21.11"
+  requestMemory: "1Gi"
+  requestCPU: "100m"
+  limitMemory: "2Gi"
+  limitCPU: "300m"
+  storage: "1Gi"
