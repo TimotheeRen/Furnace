@@ -37,4 +37,4 @@ operator:
   namespace: system
   replicaCount: 1
   operatorImage: timotheeren/operator
-  operatorTag: sha-0988b056b89bb1676347634511697fa530f80e5e
+  operatorTag: sha-9ab443cf05b79ab23dc516ab31c1b615fb3298c5
