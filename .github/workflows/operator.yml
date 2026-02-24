@@ -1,0 +1,28 @@
+name: Server
+
+on:
+  push:
+    paths:
+      - 'operator/**'
+  workflow_dispatch:
+    
+
+jobs:
+  ci:
+    uses: timotheeren/Furnace/.github/workflows/ci.yml@main
+    with:
+      username: timotheeren
+      image: "operator"
+      path: "operator"
+    secrets:
+      dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
+      dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
+  
+  cd:
+    needs: ci
+    uses: timotheeren/Furnace/.github/workflows/cd.yml@main
+    with:
+      image: "operator"
+      tag: "sha-${{ github.sha }}"
+    secrets:
+      token: ${{ secrets.PAT }}
