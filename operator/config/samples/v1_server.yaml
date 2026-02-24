@@ -6,4 +6,9 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: server-sample
 spec:
-  # TODO(user): Add fields here
+  initContainer: nginx:latest
+  requestMemory: "1Gi"
+  requestCPU: "100m"
+  limitMemory: "2Gi"
+  limitCPU: "300m"
+  storage: "1Gi"

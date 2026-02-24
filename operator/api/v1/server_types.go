@@ -5,8 +5,18 @@ import (
 )
 
 type ServerSpec struct {
-	// +optional
-	Foo *string `json:"foo,omitempty"`
+	// +required
+	InitContainer *string `json:"initContainer"`
+	// +required
+	RequestMemory *string `json:"requestMemory"`
+	// +required
+	RequestCPU *string `json:"requestCPU"`
+	// +required
+	LimitMemory *string `json:"limitMemory"`
+	// +required
+	Storage *string `json:"storage"`
+	// +required
+	LimitCPU *string `json:"limitCPU"`
 }
 
 type ServerStatus struct {
