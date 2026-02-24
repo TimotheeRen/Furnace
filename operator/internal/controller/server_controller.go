@@ -143,7 +143,7 @@ func (r *ServerReconciler) defineStatefulSet(server *furnacecomv1.Server) *appsv
 					Containers: []corev1.Container{
 						{
 							Name:  "server-container",
-							Image: "nginx:latest",
+							Image: *server.Spec.LauncherContainer,
 							VolumeMounts: []corev1.VolumeMount{
 								{
 									Name:      "server-data",
@@ -171,7 +171,7 @@ func (r *ServerReconciler) defineStatefulSet(server *furnacecomv1.Server) *appsv
 					},
 					Spec: corev1.PersistentVolumeClaimSpec{
 						AccessModes: []corev1.PersistentVolumeAccessMode{corev1.ReadWriteOnce},
-						Resources: corev1.VolumeResourceRequirements{ 
+						Resources: corev1.VolumeResourceRequirements{
 							Requests: corev1.ResourceList{
 								corev1.ResourceStorage: volumeStorage,
 							},

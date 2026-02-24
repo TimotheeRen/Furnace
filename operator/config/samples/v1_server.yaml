@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: server-sample
 spec:
-  initContainer: nginx:latest
+  initContainer: "timotheeren/vanilla:1.21.11"
   requestMemory: "1Gi"
   requestCPU: "100m"
   limitMemory: "2Gi"

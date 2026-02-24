@@ -5,6 +5,9 @@ import (
 )
 
 type ServerSpec struct {
+	// +kubebuilder:default="timotheeren/launcher:21"
+	// +optional
+	LauncherContainer *string `json:"launcherContainer"`
 	// +required
 	InitContainer *string `json:"initContainer"`
 	// +required
