@@ -12,6 +12,7 @@ import { toast } from "sonner"
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { Kbd } from "@/components/ui/kbd"
 import { CodeBlock } from "@/components/ui/code-block"
+import background from "@/public/background.png"
 
 export default function Home() {
   const router = useRouter()
@@ -38,7 +39,7 @@ export default function Home() {
   return (
     <>
       <Image 
-        src="/background.png" 
+        src={background}
         alt="Background" 
         unoptimized
         fill 

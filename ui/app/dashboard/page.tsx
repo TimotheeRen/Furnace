@@ -25,8 +25,22 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/in
 import { Label } from "@/components/ui/label"; // Un seul import suffit
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Cpu, Plus, Server, MemoryStick, HardDrive } from "lucide-react";
+import { useTransition } from "react";
+import { createServer } from "../actions/createServer";
+import { toast } from "sonner";
 
 export default function Dashboard() {
+  const [isPending, startTransition] = useTransition()
+
+  const handleForm = (formData: FormData) => {
+    startTransition(async () => {
+      const result = await createServer(formData)
+      if (result === 200) {
+        toast.info("OK")
+      }
+    })
+  }
+
   return (
     <div className="flex min-h-svh items-center justify-center">
       <Empty>
@@ -48,7 +62,7 @@ export default function Dashboard() {
               </Button>
             </DialogTrigger>
             <DialogContent>
-              <form>
+              <form action={handleForm}>
                 <DialogHeader>
                   <DialogTitle>Add a server</DialogTitle>
                   <DialogDescription>
@@ -58,7 +72,7 @@ export default function Dashboard() {
                   <Field className="mt-5">
                     <Label htmlFor="name">Server name</Label>
                     <InputGroup>
-                      <InputGroupInput placeholder="Server name..." required/>
+                      <InputGroupInput name="server-name" placeholder="Server name..." required/>
                       <InputGroupAddon>
                         <Server />
                       </InputGroupAddon>
@@ -68,7 +82,7 @@ export default function Dashboard() {
                   <div className="flex gap-5">
                     <Field>
                       <Label htmlFor="server">Server Name</Label>
-                      <Select required>
+                      <Select name="server-type" required>
                         <SelectTrigger>
                           <SelectValue placeholder="Server..."/>
                         </SelectTrigger>
@@ -81,7 +95,7 @@ export default function Dashboard() {
                     </Field>
                     <Field>
                       <Label htmlFor="server">Server Version</Label>
-                      <Select required>
+                      <Select name="version" required>
                         <SelectTrigger>
                           <SelectValue placeholder="Version..."/>
                         </SelectTrigger>
@@ -97,7 +111,7 @@ export default function Dashboard() {
                   <Field>
                     <Label htmlFor="min-ram">Required RAM (Gi)</Label>
                     <InputGroup>
-                      <InputGroupInput placeholder="Min RAM..." required/>
+                      <InputGroupInput name="min-ram" placeholder="Min RAM..." required/>
                       <InputGroupAddon>
                         <MemoryStick />
                       </InputGroupAddon>
@@ -106,7 +120,7 @@ export default function Dashboard() {
                   <Field>
                     <Label htmlFor="min-cpu">Required CPU (m)</Label>
                     <InputGroup>
-                      <InputGroupInput placeholder="Min CPU..." required/>
+                      <InputGroupInput name="min-cpu" placeholder="Min CPU..." required/>
                       <InputGroupAddon>
                         <Cpu />
                       </InputGroupAddon>
@@ -117,7 +131,7 @@ export default function Dashboard() {
                   <Field>
                     <Label htmlFor="max-ram">Maximum RAM (Gi)</Label>
                     <InputGroup>
-                      <InputGroupInput placeholder="Max RAM..." required/>
+                      <InputGroupInput name="max-ram" placeholder="Max RAM..." required/>
                       <InputGroupAddon>
                         <MemoryStick />
                       </InputGroupAddon>
@@ -126,7 +140,7 @@ export default function Dashboard() {
                   <Field>
                     <Label htmlFor="max-cpu">Maximum CPU (m)</Label>
                     <InputGroup>
-                      <InputGroupInput placeholder="Max CPU..." required/>
+                      <InputGroupInput name="max-cpu" placeholder="Max CPU..." required/>
                       <InputGroupAddon>
                         <Cpu />
                       </InputGroupAddon>
@@ -136,7 +150,7 @@ export default function Dashboard() {
                   <Field className="mb-3">
                     <Label htmlFor="storage">Storage (Gi)</Label>
                     <InputGroup>
-                      <InputGroupInput placeholder="Storage..." required/>
+                      <InputGroupInput name="storage" placeholder="Storage..." required/>
                       <InputGroupAddon>
                         <HardDrive />
                       </InputGroupAddon>
@@ -147,7 +161,7 @@ export default function Dashboard() {
                   <DialogClose asChild>
                     <Button variant="outline">Close</Button>
                   </DialogClose>
-                  <Button type="submit">Confirm</Button>
+                  <Button disabled={isPending} type="submit">Confirm</Button>
                 </DialogFooter>
               </form>
             </DialogContent>
