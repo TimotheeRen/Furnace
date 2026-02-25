@@ -45,8 +45,6 @@ func Login(c *echo.Context) error {
 		fmt.Println(err)
 	}
 
-	fmt.Println(credentials)
-
 	if user.Username != credentials.Username || user.Password != credentials.Password {
 		return c.String(http.StatusUnauthorized, "Wrong username or password.")
 	}

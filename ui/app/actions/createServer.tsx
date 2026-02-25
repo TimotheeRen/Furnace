@@ -12,9 +12,13 @@ export async function createServer(form: FormData) {
 
   const host = process.env.API_HOST || "http://localhost:5678"
 
-  try {
-    const res = await fetch(`${host}/createServer?serverName=${serverName}&serverType=${serverType}&serverVersion=${serverVersion}&minRam=${minRam}&minCpu=${minCpu}&maxRam=${maxRam}&maxCpu=${maxCpu}&storage=${storage}`)
-    return res.status
+try {
+  const res = await fetch(`${host}/createServer?server-name=${serverName}&server-type=${serverType}&server-ersion=${serverVersion}&min-ram=${minRam}&min-cpu=${minCpu}&max-ram=${maxRam}&max-cpu=${maxCpu}&storage=${storage}`, {
+    method: 'POST',
+    credentials: 'include'
+  }) 
+
+  return res.status
   } catch (error) {
     return error
   }

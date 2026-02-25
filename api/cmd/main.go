@@ -3,6 +3,7 @@ package main
 import (
 	"api/internal/router"
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/labstack/echo-jwt/v5"
@@ -13,13 +14,18 @@ import (
 func main() {
 	e := echo.New()
 	e.Use(middleware.RequestLogger())
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
+		AllowMethods:     []string{http.MethodGet, http.MethodPost, http.MethodOptions},
+		AllowCredentials: true,
+	}))
 
 	secretKey := os.Getenv("JWT_SECRET_KEY")
 	if secretKey == "" {
 		secretKey = "SECRET_KEY"
 	}
 	secret := []byte(secretKey)
-
 
 	config := echojwt.Config{
 		SigningKey: secret,
