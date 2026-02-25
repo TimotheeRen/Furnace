@@ -37,6 +37,8 @@ export default function Dashboard() {
       const result = await createServer(formData)
       if (result === 200) {
         toast.info("OK")
+      } else if (result === "invalid_fields") {
+        toast.error("Invalid fields format")
       }
     })
   }
@@ -72,7 +74,7 @@ export default function Dashboard() {
                   <Field className="mt-5">
                     <Label htmlFor="name">Server name</Label>
                     <InputGroup>
-                      <InputGroupInput name="server-name" placeholder="Server name..." required/>
+                      <InputGroupInput name="server-name" placeholder="Server name... (lowercase)" required/>
                       <InputGroupAddon>
                         <Server />
                       </InputGroupAddon>
