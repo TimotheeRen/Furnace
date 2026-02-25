@@ -4,7 +4,6 @@ import (
 	"api/internal/dto"
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"os"
 
@@ -18,7 +17,6 @@ func CreateServer(c *echo.Context) error {
 		return c.String(http.StatusBadRequest, "Donnees invalides.")
 	}
 
-	fmt.Println("Server creation...")
 	redisHost := os.Getenv("REDIS_HOST")
 	if redisHost == "" {
 		redisHost = "localhost:6379"

@@ -18,6 +18,7 @@ func CreateServer(ctx context.Context, rdb *redis.Client, client client.Client, 
 		fmt.Println(err)
 	}
 
+	fmt.Println("Server creation...")
 	serverCR := &unstructured.Unstructured{}
 	serverCR.SetGroupVersionKind(schema.GroupVersionKind{
 		Group: "furnace.com",
