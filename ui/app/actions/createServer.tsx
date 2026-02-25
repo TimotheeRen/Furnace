@@ -44,7 +44,7 @@ try {
   const res = await fetch(`${host}/createServer?${params}`, {
     method: 'POST',
     headers: {
-      "Cookie": `session_token=${token}` 
+      "Authorization": `Bearer ${token}`
     }
   }) 
 
