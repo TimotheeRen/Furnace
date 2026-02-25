@@ -1,5 +1,6 @@
 "use server"
 
+import { cookies } from "next/headers";
 import z from "zod"
 
 const CreateServerSchema = z.object({
@@ -32,6 +33,8 @@ const rawFields = {
   const data = result.data;
   const host = process.env.API_HOST || "http://localhost:5678"
 
+  const cookieStore = await cookies()
+  const token = cookieStore.get('session_token')?.value
 try {
   const params = new URLSearchParams();
   Object.entries(data).forEach(([key, value]) => {
@@ -40,7 +43,9 @@ try {
 
   const res = await fetch(`${host}/createServer?${params}`, {
     method: 'POST',
-    credentials: 'include'
+    headers: {
+      "Cookie": `session_token=${token}` 
+    }
   }) 
 
   return res.status
