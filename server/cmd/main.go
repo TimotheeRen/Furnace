@@ -37,7 +37,7 @@ func main() {
 	}
 
 	for {
-		task, err := rdb.BRPop(ctx, 0, "getSecret").Result()
+		task, err := rdb.BRPop(ctx, 0, "getSecret", "createServer").Result()
 		if err != nil {
 			fmt.Printf("Erreur Redis: %v. Nouvel essai dans 5s...\n", err)
             time.Sleep(5 * time.Second)
@@ -46,6 +46,8 @@ func main() {
 		switch task[0] {
 			case "getSecret":
 				handlers.GetSecret(ctx, rdb, client, task[1])
+			case "createServer":
+				handlers.CreateServer(ctx, rdb, client, task[1])
 		}
 	}
 }
