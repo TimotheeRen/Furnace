@@ -15,5 +15,5 @@ metadata:
   name: server-role
 rules:
   - apiGroups: ["furnace.com"]
-    resources: ["server"]
+    resources: ["servers"]
     verbs: ["*"]

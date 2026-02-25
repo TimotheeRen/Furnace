@@ -42,6 +42,6 @@ func CreateServer(ctx context.Context, rdb *redis.Client, client client.Client, 
 
 	err := client.Create(ctx, serverCR)
 	if err != nil {
-		fmt.Printf("k8s Error: %v/n", err)
+		fmt.Printf("k8s Error: %v\n", err)
 	}
 }
