@@ -51,7 +51,7 @@ export default async function Dashboard() {
         <h1>SERVERS</h1>
         <div className="flex flex-col gap-2 my-3">
           {servers.map((s: ServerStat) => (
-            <Link href={'/dashboard/server'} key={s.serverName}>
+            <Link href={`/dashboard/${s.serverName}`} key={s.serverName}>
             <Item variant="outline" className="w-100 hover:bg-zinc-900" >
               <ItemMedia>
                 <Box/>
