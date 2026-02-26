@@ -55,7 +55,7 @@ export default function ServerSidebar({ server }: ServerSidebarProps) {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="">
+                  <Link href={`/dashboard/${server}/files`}>
                     <Folder />
                     <span>Files</span>
                   </Link>
