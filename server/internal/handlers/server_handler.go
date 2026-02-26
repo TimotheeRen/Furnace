@@ -8,10 +8,12 @@ import (
 	"strings"
 	"time"
 
+	corev1 "k8s.io/api/core/v1"
 	"github.com/redis/go-redis/v9"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"github.com/mcstatus-io/mcutil"
 )
 
 func CreateServer(ctx context.Context, rdb *redis.Client, client client.Client, payload string) {
@@ -68,10 +70,22 @@ func GetServers(ctx context.Context, rdb *redis.Client, k8sClient client.Client,
 	var serverStat []dto.ServerStat
 	for _, item := range serverList.Items {
 		spec := item.Object["spec"].(map[string]interface{})
+		host := fmt.Sprintf("%s-svc.servers.svc.cluster.local", item.GetName())
+		status := "Shutdown"
+		_, error := mcutil.Status(host, 25565)
+		if error == nil {
+			status = "Running"
+		} else {
+			pod := &corev1.Pod{}
+			if err := k8sClient.Get(ctx, client.ObjectKey{Name: item.GetName() + "-0", Namespace: "servers"}, pod); err == nil {
+				fmt.Println(error)
+				status = "Starting"
+			}
+		}
 		serverStat = append(serverStat, dto.ServerStat{
 			ServerName: item.GetName(),
 			ServerType: strings.Split(spec["initContainer"].(string), "/")[1],
-			ServerStatus: "Running",
+			ServerStatus: status,
 		})
 	}
 	jsonServeStat, err := json.Marshal(serverStat)

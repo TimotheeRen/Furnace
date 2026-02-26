@@ -17,6 +17,12 @@ interface ServerStat {
   serverStatus: string
 }
 
+const statusColors: { [key: string]: string } = {
+    "Running": "#22c55e",
+    "Starting": "#eab308",
+    "Shutdown": "#ef4444",
+};
+
 export default async function Dashboard() {
   const servers = await getServers()
   const isEmpty = !servers || servers.length === 0;
@@ -42,7 +48,7 @@ export default async function Dashboard() {
     {!isEmpty && (
       <div>
         <h1>SERVERS</h1>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 my-3">
           {servers.map((s: ServerStat) => (
             <Item variant="outline" className="w-100" key={s.serverName}>
               <ItemMedia>
@@ -53,7 +59,7 @@ export default async function Dashboard() {
                 <ItemDescription>{s.serverType}</ItemDescription>
               </ItemContent>
               <ItemActions>
-                <Dot size="20" />
+                <Dot size="20" color={statusColors[s.serverStatus]} />
               </ItemActions>
             </Item>
           ))}
