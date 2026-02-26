@@ -10,3 +10,9 @@ type ServerDTO struct {
 	MaxCpu string `json:"maxCpu"`
 	Storage string `json:"storage"`
 }
+
+type ServerStat struct {
+	ServerName string `json:"serverName"`
+	ServerType string `json:"serverType"`
+	ServerStatus string `json:"serverStatus"`
+}

@@ -12,8 +12,10 @@ export async function getServers() {
         "Authorization": `Bearer ${token}`
       }
     })
-    console.log(res)
+    if (!res.ok) console.log(res.status)
+    const data = await res.json()
+    return data
   } catch (error) {
-    return error
+    console.log(error)
   }
 }

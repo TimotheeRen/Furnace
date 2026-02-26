@@ -6,17 +6,24 @@ import {
   EmptyMedia, 
   EmptyTitle 
 } from "@/components/ui/empty";
-import { Server } from "lucide-react"
+import { Box, Dot, Power, Server } from "lucide-react"
 import { CreateServerDialog } from "@/components/clients/CreateServerDialog";
 import { getServers } from "@/components/rsc/getServer";
+import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
+
+interface ServerStat {
+  serverName: string
+  serverType: string
+  serverStatus: string
+}
 
 export default async function Dashboard() {
-  const empty = true
-  const server = await getServers()
+  const servers = await getServers()
+  const isEmpty = !servers || servers.length === 0;
 
   return (
     <div className="flex min-h-svh items-center justify-center">
-    {empty && (
+    {isEmpty && (
       <Empty>
         <EmptyHeader>
           <EmptyMedia variant="icon">
@@ -32,8 +39,27 @@ export default async function Dashboard() {
         </EmptyContent>
       </Empty>
     )}
-    {!empty && (
-      <h1>SERVERS</h1>
+    {!isEmpty && (
+      <div>
+        <h1>SERVERS</h1>
+        <div className="flex flex-col gap-2">
+          {servers.map((s: ServerStat) => (
+            <Item variant="outline" className="w-100" key={s.serverName}>
+              <ItemMedia>
+                <Box/>
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>{s.serverName}</ItemTitle>
+                <ItemDescription>{s.serverType}</ItemDescription>
+              </ItemContent>
+              <ItemActions>
+                <Dot size="20" />
+              </ItemActions>
+            </Item>
+          ))}
+        </div>
+        <CreateServerDialog/>
+      </div>
     )}
     </div>
   );
