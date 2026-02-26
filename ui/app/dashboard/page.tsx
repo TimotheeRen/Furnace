@@ -10,6 +10,7 @@ import { Box, Dot, Power, Server } from "lucide-react"
 import { CreateServerDialog } from "@/components/clients/CreateServerDialog";
 import { getServers } from "@/components/rsc/getServer";
 import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
+import Link from "next/link";
 
 interface ServerStat {
   serverName: string
@@ -50,7 +51,8 @@ export default async function Dashboard() {
         <h1>SERVERS</h1>
         <div className="flex flex-col gap-2 my-3">
           {servers.map((s: ServerStat) => (
-            <Item variant="outline" className="w-100" key={s.serverName}>
+            <Link href={'/dashboard/server'} key={s.serverName}>
+            <Item variant="outline" className="w-100 hover:bg-zinc-900" >
               <ItemMedia>
                 <Box/>
               </ItemMedia>
@@ -62,6 +64,7 @@ export default async function Dashboard() {
                 <Dot size="20" color={statusColors[s.serverStatus]} />
               </ItemActions>
             </Item>
+            </Link>
           ))}
         </div>
         <CreateServerDialog/>
