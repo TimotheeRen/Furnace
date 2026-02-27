@@ -93,7 +93,7 @@ export default async function ServerDashboard({params}: PageProps) {
             </div>
           </CardContent>
         </Card>
-        <div className="flex justify-between gap-3">
+        <div className="flex flex-col sm:flex-row  justify-between gap-3">
           <Card className="w-full">
             <CardHeader>
               <CardTitle className="text-zinc-600">Latency</CardTitle>
@@ -160,9 +160,9 @@ export default async function ServerDashboard({params}: PageProps) {
     {!result.serverReady && (
       <div className="fixed w-full h-full flex items-center justify-center">
         <Spinner className="size-8"/>
-        <Refresher interval={3000} />
       </div>
     )}
+    <Refresher interval={5000} />
    </>
   )
 }
