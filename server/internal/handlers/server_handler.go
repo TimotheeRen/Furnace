@@ -145,18 +145,18 @@ func ServerInfo(ctx context.Context, rdb *redis.Client, k8sClient client.Client,
 	cpuPercent := int((float64(cpu) / float64(maxCpu)) * 100)
     memPercent := int((float64(mem) / float64(maxMem)) * 100)
 
-	host := fmt.Sprintf("%s-svc.servers.svc.cluster.local", payload)
-	status := ""
-	res, err := mcutil.Status(host, uint16(nodePort))
+	// host := fmt.Sprintf("%s-svc.servers.svc.cluster.local", payload)
+	status := "Shutdown"
+	res, err := mcutil.Status(nodeIP, uint16(nodePort))
 	if err != nil {
 		fmt.Println(err)
-		status = "Shutdown"
 	} else {
 		status = "Running"
-		players := res.Players.Online
-		maxPlayers := res.Players.Max
-		latency := res.Latency
-		fmt.Printf("Joueurs: %d/%d | Latency: %d | Status: %d\n", players, maxPlayers, latency, status)
+		players := int(*res.Players.Online)
+		maxPlayers := int(*res.Players.Max)
+		latency := res.Latency.Milliseconds()
+		version := res.Version.NameRaw
+		fmt.Printf("Joueurs: %d/%d | Latency: %d | Status: %s | Version: %s\n", players, maxPlayers, latency, status, version)
 	}
 
 	fmt.Printf(`CPU: %dm | RAM: %dMi | CPU_MAX: %dm | RAM_MAX: %dMi | CPU_USAGE: %d%%| RAM_USAGE: %d%%| Address: %s`, cpu, mem, maxCpu, maxMem, cpuPercent, memPercent, address)
