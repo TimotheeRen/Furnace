@@ -19,7 +19,7 @@ api:
   targetPort: 5678
   port: 5678
   apiImage: timotheeren/api
-  apiTag: sha-71ccdbd26117ae59c792e8fda72d27f7e46020b0
+  apiTag: sha-83e9df6e29e72d28b5530baeca14559e8a26d568
   redisHost: redis-service:6379
 
 server:
