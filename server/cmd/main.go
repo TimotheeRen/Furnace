@@ -10,6 +10,7 @@ import (
 	"github.com/redis/go-redis/v9"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
+	metricsv "k8s.io/metrics/pkg/client/clientset/versioned"
 )
 
 func main() {
@@ -36,8 +37,13 @@ func main() {
 		panic(err)
 	}
 
+	metricsClient, err := metricsv.NewForConfig(cfg)
+	if err != nil {
+		fmt.Println(err)
+	}
+
 	for {
-		task, err := rdb.BRPop(ctx, 0, "getSecret", "createServer", "getServers").Result()
+		task, err := rdb.BRPop(ctx, 0, "getSecret", "createServer", "getServers", "serverInfo").Result()
 		if err != nil {
 			fmt.Printf("Erreur Redis: %v. Nouvel essai dans 5s...\n", err)
             time.Sleep(5 * time.Second)
@@ -50,6 +56,8 @@ func main() {
 				handlers.CreateServer(ctx, rdb, client, task[1])
 			case "getServers":
 				handlers.GetServers(ctx, rdb, client, task[1])
+			case "serverInfo":
+				handlers.ServerInfo(ctx, rdb, client, task[1], metricsClient)
 		}
 	}
 }

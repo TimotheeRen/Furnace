@@ -8,12 +8,14 @@ import (
 	"strings"
 	"time"
 
-	corev1 "k8s.io/api/core/v1"
+	"github.com/mcstatus-io/mcutil"
 	"github.com/redis/go-redis/v9"
+	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	metricsv "k8s.io/metrics/pkg/client/clientset/versioned"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"github.com/mcstatus-io/mcutil"
 )
 
 func CreateServer(ctx context.Context, rdb *redis.Client, client client.Client, payload string) {
@@ -95,4 +97,67 @@ func GetServers(ctx context.Context, rdb *redis.Client, k8sClient client.Client,
 	fmt.Println(string(jsonServeStat))
 	rdb.LPush(ctx, "getServersResponse", jsonServeStat)
 	rdb.Expire(ctx, "getServersResponse", 3*time.Second)
+}
+
+func ServerInfo(ctx context.Context, rdb *redis.Client, k8sClient client.Client, payload string, metricsClient *metricsv.Clientset) {
+	podName := payload + "-0"
+	podMetrics, err := metricsClient.MetricsV1beta1().PodMetricses("servers").Get(context.TODO(), podName, metav1.GetOptions{})
+	if err != nil {
+		fmt.Println(err)
+	}
+	container := podMetrics.Containers[0]
+	cpu := container.Usage.Cpu().MilliValue()
+	mem := container.Usage.Memory().Value() / (1024 * 1024)
+
+	svc := &corev1.Service{}
+	err = k8sClient.Get(ctx, client.ObjectKey{Name: payload+"-svc", Namespace: "servers"}, svc)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	var nodePort int32
+	for _, p := range svc.Spec.Ports {
+		if p.Port == 25565 || nodePort == 0 {
+			nodePort = p.NodePort
+		}
+	}
+
+	nodeList := &corev1.NodeList{}
+	if err := k8sClient.List(ctx, nodeList); err != nil {
+		fmt.Println(err)
+	}
+
+	nodeIP := nodeList.Items[0].Status.Addresses[0].Address
+	address := fmt.Sprintf("%s:%d", nodeIP, nodePort)
+
+	pod := &corev1.Pod{}
+	err = k8sClient.Get(ctx, client.ObjectKey{Name: podName, Namespace: "servers"}, pod)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	podContainer := pod.Spec.Containers[0]
+	maxRamQty := podContainer.Resources.Limits.Memory()
+	maxMem := maxRamQty.Value() / (1024 * 1024)
+	maxCpu := podContainer.Resources.Limits.Cpu().MilliValue()
+
+
+	cpuPercent := int((float64(cpu) / float64(maxCpu)) * 100)
+    memPercent := int((float64(mem) / float64(maxMem)) * 100)
+
+	host := fmt.Sprintf("%s-svc.servers.svc.cluster.local", payload)
+	status := ""
+	res, err := mcutil.Status(host, uint16(nodePort))
+	if err != nil {
+		fmt.Println(err)
+		status = "Shutdown"
+	} else {
+		status = "Running"
+		players := res.Players.Online
+		maxPlayers := res.Players.Max
+		latency := res.Latency
+		fmt.Printf("Joueurs: %d/%d | Latency: %d | Status: %d\n", players, maxPlayers, latency, status)
+	}
+
+	fmt.Printf(`CPU: %dm | RAM: %dMi | CPU_MAX: %dm | RAM_MAX: %dMi | CPU_USAGE: %d%%| RAM_USAGE: %d%%| Address: %s`, cpu, mem, maxCpu, maxMem, cpuPercent, memPercent, address)
 }

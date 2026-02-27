@@ -50,3 +50,20 @@ func GetServers(c *echo.Context) error {
 	fmt.Println(res[1])
 	return c.Blob(http.StatusOK, "application/json", []byte(res[1]))
 }
+
+func ServerInfo(c *echo.Context) error {
+	redisHost := os.Getenv("REDIS_HOST")
+	if redisHost == "" {
+		redisHost = "localhost:6379"
+	}
+	rdb := redis.NewClient(&redis.Options{
+		Addr: redisHost,
+		Password: "",
+		DB: 0,
+	})
+	ctx := context.Background()
+	server := c.QueryParam("server")
+	rdb.LPush(ctx, "serverInfo", server)
+	res, _ := rdb.BRPop(ctx, 3*time.Second, "serverInfoResponse").Result()
+	return c.Blob(http.StatusOK, "application/json", []byte(res[1]))
+}
