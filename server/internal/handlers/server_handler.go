@@ -105,7 +105,21 @@ func ServerInfo(ctx context.Context, rdb *redis.Client, k8sClient client.Client,
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	if len(podMetrics.Containers) == 0 {
+		serverDTO := dto.ServerInfo{ServerReady: false}
+		serverDTOjson, err := json.Marshal(serverDTO)
+		if err != nil {
+			fmt.Println(err)
+		}
+		rdb.LPush(ctx, "serverInfoResponse", serverDTOjson)
+		rdb.Expire(ctx, "serverInfoResponse", 3*time.Second)
+		fmt.Println("CONTAINER NOT READY")
+		return
+	}
+
 	container := podMetrics.Containers[0]
+
 	cpu := container.Usage.Cpu().MilliValue()
 	mem := container.Usage.Memory().Value() / (1024 * 1024)
 
@@ -146,18 +160,46 @@ func ServerInfo(ctx context.Context, rdb *redis.Client, k8sClient client.Client,
     memPercent := int((float64(mem) / float64(maxMem)) * 100)
 
 	// host := fmt.Sprintf("%s-svc.servers.svc.cluster.local", payload)
+	players := 0
+	maxPlayers := 0
+	latency := 0
+	version := "None"
 	status := "Shutdown"
 	res, err := mcutil.Status(nodeIP, uint16(nodePort))
 	if err != nil {
 		fmt.Println(err)
 	} else {
 		status = "Running"
-		players := int(*res.Players.Online)
-		maxPlayers := int(*res.Players.Max)
-		latency := res.Latency.Milliseconds()
-		version := res.Version.NameRaw
-		fmt.Printf("Joueurs: %d/%d | Latency: %d | Status: %s | Version: %s\n", players, maxPlayers, latency, status, version)
+		players = int(*res.Players.Online)
+		maxPlayers = int(*res.Players.Max)
+		latency = int(res.Latency.Milliseconds())
+		version = res.Version.NameRaw
+		// fmt.Printf("Joueurs: %d/%d | Latency: %d | Status: %s | Version: %s\n", players, maxPlayers, latency, status, version)
+	}
+	
+	serverDTO := dto.ServerInfo{
+		ServerReady: true,
+		ServerCPU: cpu,
+		ServerRAM: mem,
+		ServerMaxCPU: maxCpu,
+		ServerMaxRam: maxMem,
+		ServerCPUUsage: cpuPercent,
+		ServerRAMUsage: memPercent,
+		ServerAddress: address,
+		ServerPlayers: players,
+		ServerMaxPlayers: maxPlayers,
+		ServerLatency: latency,
+		ServerStatus: status,
+		ServerVersion: version,
 	}
 
-	fmt.Printf(`CPU: %dm | RAM: %dMi | CPU_MAX: %dm | RAM_MAX: %dMi | CPU_USAGE: %d%%| RAM_USAGE: %d%%| Address: %s`, cpu, mem, maxCpu, maxMem, cpuPercent, memPercent, address)
+	serverDTOjson, err := json.Marshal(serverDTO)
+	if err != nil {
+		fmt.Println(err)
+	}
+	rdb.LPush(ctx, "serverInfoResponse", serverDTOjson)
+	rdb.Expire(ctx, "serverInfoResponse", 3*time.Second)
+
+	fmt.Println(serverDTO)
+	// fmt.Printf(`CPU: %dm | RAM: %dMi | CPU_MAX: %dm | RAM_MAX: %dMi | CPU_USAGE: %d%%| RAM_USAGE: %d%%| Address: %s`, cpu, mem, maxCpu, maxMem, cpuPercent, memPercent, address)
 }

@@ -64,6 +64,10 @@ func ServerInfo(c *echo.Context) error {
 	ctx := context.Background()
 	server := c.QueryParam("server")
 	rdb.LPush(ctx, "serverInfo", server)
-	res, _ := rdb.BRPop(ctx, 3*time.Second, "serverInfoResponse").Result()
+	res, err := rdb.BRPop(ctx, 10*time.Second, "serverInfoResponse").Result()
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(res)
 	return c.Blob(http.StatusOK, "application/json", []byte(res[1]))
 }

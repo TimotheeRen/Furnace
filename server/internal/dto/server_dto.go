@@ -16,3 +16,19 @@ type ServerStat struct {
 	ServerType string `json:"serverType"`
 	ServerStatus string `json:"serverStatus"`
 }
+
+type ServerInfo struct {
+	ServerReady bool `json:"serverReady"`
+	ServerCPU int64 `json:"serverCPU"`
+	ServerRAM int64 `json:"serverRAM"`
+	ServerMaxCPU int64 `json:"serverMaxCPU"`
+	ServerMaxRam int64 `json:"serverMaxRam"`
+	ServerCPUUsage int `json:"serverCPUUsage"`
+	ServerRAMUsage int `json:"serverRAMUsage"`
+	ServerAddress string `json:"serverAddress"`
+	ServerPlayers int `json:"serverPlayers"`
+	ServerMaxPlayers int `json:"serverMaxPlayers"`
+	ServerLatency int `json:"serverLatency"`
+	ServerStatus string `json:"serverStatus"`
+	ServerVersion string `json:"serverVersion"`
+}

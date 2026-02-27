@@ -12,6 +12,7 @@ export async function serverInfo(server: string) {
     })
     if (!res.ok) console.log(res.status)
     const data = await res.json()
+    console.log(data)
     return data
   } catch (error) {
     console.log(error)
