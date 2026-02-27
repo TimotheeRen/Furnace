@@ -21,5 +21,14 @@ rules:
     resources: ["pods"]
     verbs: ["get", "list"]
   - apiGroups: [""]
-    resources: ["pods", "nodes"]
+    resources: ["services", "pods"]
     verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: node-reader-role
+rules:
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["get", "list"]
