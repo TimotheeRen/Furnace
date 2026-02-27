@@ -9,7 +9,7 @@ ui:
   targetPort: 3000
   port: 80
   uiImage: timotheeren/ui
-  uiTag: sha-83e9df6e29e72d28b5530baeca14559e8a26d568
+  uiTag: sha-0a35728595a0eb71bdf2ce89c33a6c8c263bde64
   apiHost: http://api-service:5678
 
 api:
