@@ -13,6 +13,13 @@ interface PageProps {
   params: Promise<{ server: string }>
 }
 
+interface Metric {
+  time: string;
+  cpu: number;
+  ram: number;
+  players: number;
+}
+
 export default async function ServerDashboard({params}: PageProps) {
   const { server } = await params
   const result = await serverInfo(server)
@@ -29,8 +36,10 @@ export default async function ServerDashboard({params}: PageProps) {
       "Shutdown": "text-orange-600",
   };
 
-  const resourcesData = result.serverMetrics?.map(({ players, ...rest }) => rest);
-  const playersData = (result.serverMetrics || []).map(({ cpu, ram, ...rest }) => rest);
+const resourcesData = (result.serverMetrics as Metric[] || [])
+    .map(({ players, ...rest }: Metric) => rest);
+const playersData = (result.serverMetrics as Metric[] || [])
+    .map(({ cpu, ram, ...rest }: Metric) => rest);
 
   return (
     <>

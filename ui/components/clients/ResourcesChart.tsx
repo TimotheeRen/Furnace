@@ -4,7 +4,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "../ui/chart";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 
-export default function ResourcesChart({ data }: { data: any[] }) {
+interface ResourceMetric {
+  time: string;
+  cpu: number;
+  ram: number;
+}
+
+export default function ResourcesChart({ data }: { data: ResourceMetric[] }) {
 
   const resourcesConfig = {
     ram: {
