@@ -1,9 +1,13 @@
 import Refresher from "@/components/clients/Refresher"
+import ResourcesChart from "@/components/clients/ResourcesChart"
+import PlayersChart from "@/components/clients/PlayersChart"
 import { serverInfo } from "@/components/rsc/serverInfo"
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Spinner } from "@/components/ui/spinner"
 import { Button } from "@base-ui/react"
 import { Activity, Box, Cpu, Gauge, HistoryIcon, MemoryStick, Power, Users, Zap } from "lucide-react"
+import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 
 interface PageProps {
   params: Promise<{ server: string }>
@@ -24,6 +28,9 @@ export default async function ServerDashboard({params}: PageProps) {
       "Starting": "text-red-800",
       "Shutdown": "text-orange-600",
   };
+
+  const resourcesData = result.serverMetrics?.map(({ players, ...rest }) => rest);
+  const playersData = (result.serverMetrics || []).map(({ cpu, ram, ...rest }) => rest);
 
   return (
     <>
@@ -91,7 +98,7 @@ export default async function ServerDashboard({params}: PageProps) {
             </div>
           </CardContent>
         </Card>
-        <div className="flex flex-col sm:flex-row  justify-between gap-3">
+        <div className="flex flex-col sm:flex-row justify-between gap-3 mb-3">
           <Card className="w-full">
             <CardHeader>
               <CardTitle className="text-zinc-600">Latency</CardTitle>
@@ -141,11 +148,19 @@ export default async function ServerDashboard({params}: PageProps) {
             </CardContent>
           </Card>
         </div>
+        <div className="flex flex-col lg:flex-row gap-3">
+          <div className="flex-1 min-w-0">
+            <ResourcesChart data={resourcesData}/>
+          </div>
+          <div className="flex-1 min-w-0">
+            <PlayersChart data={playersData}/>
+          </div>
+        </div>
       </div>
     </>
      )}
     {!result.serverReady && (
-      <div className="fixed w-full h-full flex items-center justify-center">
+      <div className="fixed w-full h-full flex top-0 left-0 items-center justify-center">
         <Spinner className="size-8"/>
       </div>
     )}
