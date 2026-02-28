@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"os"
 	"server/internal/dto"
 	"time"
 
@@ -58,6 +59,9 @@ func GetResources(ctx context.Context, rdb *redis.Client, k8sClient client.Clien
 		if host == "" {
 			fmt.Println("The pod as no IP")
 			continue
+		}
+		if os.Getenv("HOSTNAME") == "" {
+			host = "0.0.0.0"
 		}
 		status, error := mcutil.Status(host, 25565)
 		var players int64
