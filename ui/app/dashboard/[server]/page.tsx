@@ -1,8 +1,6 @@
 import Refresher from "@/components/clients/Refresher"
-import ServerSidebar from "@/components/clients/ServerSidebar"
 import { serverInfo } from "@/components/rsc/serverInfo"
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { Spinner } from "@/components/ui/spinner"
 import { Button } from "@base-ui/react"
 import { Activity, Box, Cpu, Gauge, HistoryIcon, MemoryStick, Power, Users, Zap } from "lucide-react"
@@ -144,17 +142,6 @@ export default async function ServerDashboard({params}: PageProps) {
           </Card>
         </div>
       </div>
-      <SidebarProvider defaultOpen={false}
-      style={{
-        "--sidebar-width": "200px",
-        "--sidebar-width-icon": "64px",
-      } as React.CSSProperties}
-      >
-        <ServerSidebar server={server} />
-        <main className="flex-1 overflow-y-auto p-2">
-          <SidebarTrigger />
-        </main>
-      </SidebarProvider>
     </>
      )}
     {!result.serverReady && (
