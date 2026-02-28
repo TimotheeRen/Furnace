@@ -29,6 +29,9 @@ func GetResources(ctx context.Context, rdb *redis.Client, k8sClient client.Clien
 	}
 
 	for _, pod := range podList.Items {
+		if len(pod.Spec.Containers) == 0 {
+			continue
+		}
 		podContainer := pod.Spec.Containers[0]
 		maxMem := podContainer.Resources.Limits.Memory().Value() / (1024 * 1024)
 		maxCpu := podContainer.Resources.Limits.Cpu().MilliValue()
