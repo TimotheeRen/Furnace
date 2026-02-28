@@ -41,6 +41,9 @@ func GetResources(ctx context.Context, rdb *redis.Client, k8sClient client.Clien
 			fmt.Println(err)
 		}
 
+		if len(podMetrics.Containers) == 0 {
+			continue
+		}
 		container := podMetrics.Containers[0]
 		cpu := container.Usage.Cpu().MilliValue()
 		mem := container.Usage.Memory().Value() / (1024 * 1024)
