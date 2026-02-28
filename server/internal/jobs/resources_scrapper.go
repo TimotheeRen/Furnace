@@ -51,7 +51,11 @@ func GetResources(ctx context.Context, rdb *redis.Client, k8sClient client.Clien
 		memPercent := int((float64(mem) / float64(maxMem)) * 100)
 		cpuPercent := int((float64(cpu) / float64(maxCpu)) * 100)
 
-		host := fmt.Sprintf("%s-svc.servers.svc.cluster.local", pod.Name)
+		host := pod.Status.PodIP
+		if host == "" {
+			fmt.Println("The pod as no IP")
+			continue
+		}
 		status, error := mcutil.Status(host, 25565)
 		var players int64
 		var maxPlayers int64
@@ -61,7 +65,7 @@ func GetResources(ctx context.Context, rdb *redis.Client, k8sClient client.Clien
 			maxPlayers = *status.Players.Max
 			playersPercent = int(float64(players) / float64(maxPlayers) * 100)
 		} else {
-			fmt.Println("Minecraft server is down.")
+			fmt.Printf("Minecraft server is down: %v\n", error)
 			continue
 		}
 

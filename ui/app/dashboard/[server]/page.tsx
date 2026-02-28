@@ -113,7 +113,7 @@ export default async function ServerDashboard({params}: PageProps) {
             </CardHeader>
             <CardContent>
               <h1 className="text-4xl mb-1">{ result.serverPlayers}/{ result.serverMaxPlayers }</h1>
-              <p className="text-zinc-500 text-sm">Average request latency</p>
+              <p className="text-zinc-500 text-sm">Connected players</p>
             </CardContent>
           </Card>
           <Card className="w-full">
@@ -125,19 +125,19 @@ export default async function ServerDashboard({params}: PageProps) {
             </CardHeader>
             <CardContent>
               <h1 className="text-4xl mb-1">{ result.serverCPUUsage }%</h1>
-              <p className="text-zinc-500 text-sm">Average request latency</p>
+              <p className="text-zinc-500 text-sm">Server CPU usage</p>
             </CardContent>
           </Card>
           <Card className="w-full">
             <CardHeader>
-              <CardTitle className="text-zinc-600">Latency</CardTitle>
+              <CardTitle className="text-zinc-600">RAM</CardTitle>
               <CardAction>
                 <MemoryStick />
               </CardAction>
             </CardHeader>
             <CardContent>
               <h1 className="text-4xl mb-1">{ result.serverRAMUsage }%</h1>
-              <p className="text-zinc-500 text-sm">Average request latency</p>
+              <p className="text-zinc-500 text-sm">Server RAM usage</p>
             </CardContent>
           </Card>
         </div>
