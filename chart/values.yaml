@@ -29,7 +29,7 @@ server:
   targetPort: 5678
   port: 5678
   serverImage: timotheeren/server
-  serverTag: sha-e2bf47b3a6ece016cc12c99f964b6c9cc806dec3
+  serverTag: sha-e8774b12f8ff26fab7ff031737b59af385d89e6a
   redisHost: redis-service:6379
 
 operator:
