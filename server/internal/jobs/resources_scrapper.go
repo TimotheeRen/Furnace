@@ -2,7 +2,10 @@ package jobs
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"server/internal/dto"
+	"time"
 
 	"github.com/mcstatus-io/mcutil"
 	"github.com/redis/go-redis/v9"
@@ -67,6 +70,27 @@ func GetResources(ctx context.Context, rdb *redis.Client, k8sClient client.Clien
 		} else {
 			fmt.Printf("Minecraft server is down: %v\n", error)
 			continue
+		}
+
+		metric := dto.ServerMetric{
+			Time: time.Now().Format("19:02:32"),
+			Cpu: cpuPercent,
+			Ram: memPercent,
+			Players: playersPercent,
+		}
+
+		payload, err := json.Marshal(metric)
+		if err != nil {
+			fmt.Println(err)
+		}
+		historyKey := fmt.Sprintf("server:history:%s", pod.Name)
+
+		pipe := rdb.Pipeline()
+		pipe.LPush(ctx, historyKey, payload)
+		pipe.LTrim(ctx, historyKey, 0, 59)
+		_, err = pipe.Exec(ctx)
+		if err != nil {
+			fmt.Println(err)
 		}
 
 		fmt.Printf("RAM: %d%% | CPU: %d%% | Players: %d\n", memPercent, cpuPercent, playersPercent)

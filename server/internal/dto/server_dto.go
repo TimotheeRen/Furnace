@@ -32,3 +32,10 @@ type ServerInfo struct {
 	ServerStatus string `json:"serverStatus"`
 	ServerVersion string `json:"serverVersion"`
 }
+
+type ServerMetric struct {
+	Time string `json:"time"`
+	Cpu int `json:"cpu"`
+	Ram int `json:"ram"`
+	Players int `json:"players"`
+}
