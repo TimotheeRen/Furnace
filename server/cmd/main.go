@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"os"
 	"server/internal/handlers"
+	"server/internal/jobs"
 	"time"
 
 	"github.com/redis/go-redis/v9"
+	metricsv "k8s.io/metrics/pkg/client/clientset/versioned"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
-	metricsv "k8s.io/metrics/pkg/client/clientset/versioned"
 )
 
 func main() {
@@ -41,6 +42,20 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	go func() {
+		ticker := time.NewTicker(5 * time.Second)
+		defer ticker.Stop()
+
+		for {
+			select {
+			case <- ticker.C:
+				jobs.GetResources(ctx, rdb, client, metricsClient)
+			case <- ctx.Done():
+				return
+			}
+		}
+	}()
 
 	for {
 		task, err := rdb.BRPop(ctx, 0, "getSecret", "createServer", "getServers", "serverInfo").Result()
