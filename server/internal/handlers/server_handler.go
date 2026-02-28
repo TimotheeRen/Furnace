@@ -176,7 +176,23 @@ func ServerInfo(ctx context.Context, rdb *redis.Client, k8sClient client.Client,
 		version = res.Version.NameRaw
 		// fmt.Printf("Joueurs: %d/%d | Latency: %d | Status: %s | Version: %s\n", players, maxPlayers, latency, status, version)
 	}
+
+	historyKey := fmt.Sprintf("server:history:%s", podName)
+	data, err := rdb.LRange(ctx, historyKey, 0, -1).Result()
+	if err != nil {
+		fmt.Println(err)
+	}
 	
+	// JSON -> Struct
+	var metrics []dto.ServerMetric
+    for i := len(data) - 1; i >= 0; i-- {
+        var m dto.ServerMetric
+        if err := json.Unmarshal([]byte(data[i]), &m); err != nil {
+            continue
+        }
+        metrics = append(metrics, m)
+    }
+
 	serverDTO := dto.ServerInfo{
 		ServerReady: true,
 		ServerCPU: cpu,
@@ -191,6 +207,7 @@ func ServerInfo(ctx context.Context, rdb *redis.Client, k8sClient client.Client,
 		ServerLatency: latency,
 		ServerStatus: status,
 		ServerVersion: version,
+		ServerMetrics: metrics,
 	}
 
 	serverDTOjson, err := json.Marshal(serverDTO)

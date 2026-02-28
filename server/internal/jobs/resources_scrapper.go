@@ -17,7 +17,7 @@ import (
 )
 
 func GetResources(ctx context.Context, rdb *redis.Client, k8sClient client.Client, metricsClient *metricsv.Clientset) {
-	fmt.Println("Scrapping...")
+	fmt.Println("Scraping...")
 
 	podList := &corev1.PodList{}
 	listOpts := []client.ListOption{
@@ -77,7 +77,7 @@ func GetResources(ctx context.Context, rdb *redis.Client, k8sClient client.Clien
 		}
 
 		metric := dto.ServerMetric{
-			Time: time.Now().Format("19:02:32"),
+			Time: time.Now().Format("15:04:05"),
 			Cpu: cpuPercent,
 			Ram: memPercent,
 			Players: playersPercent,

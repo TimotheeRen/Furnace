@@ -31,6 +31,7 @@ type ServerInfo struct {
 	ServerLatency int `json:"serverLatency"`
 	ServerStatus string `json:"serverStatus"`
 	ServerVersion string `json:"serverVersion"`
+	ServerMetrics []ServerMetric `json:"serverMetrics"`
 }
 
 type ServerMetric struct {
