@@ -3,7 +3,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ChevronRight, Send, Terminal } from "lucide-react";
 
-export default function Console() {
+interface PageProps {
+  params: Promise<{ server: string }>
+}
+
+export default async function ServerDashboard({params}: PageProps) {
+  const { server } = await params
   return (
     <div className="h-screen w-full flex items-center justify-center">
       <Card className="w-[90%] h-[80%] p-10">
@@ -14,7 +19,7 @@ export default function Console() {
           </div>
         </CardHeader>
         <CardContent className="flex-1 min-h-0 p-4 bg-zinc-950 rounded-md border">
-          <ConsoleContent/>
+          <ConsoleContent server={server}/>
           <div className="flex items-center gap-2">
             <ChevronRight color="lime"/>
             <Input placeholder="Enter a command..." className="border-none bg-transparent! shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"/>

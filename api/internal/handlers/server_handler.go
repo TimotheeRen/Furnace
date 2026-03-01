@@ -98,24 +98,39 @@ func ServerConsole(c *echo.Context) error {
 	}
 
 	podName := c.QueryParam("server") + "-0"
+	streamKey := "logs:" + podName
 	
-	sub := rdb.Subscribe(ctx, "logs:"+podName)
-	defer sub.Close()
+	history, _ := rdb.XRevRangeN(ctx, streamKey, "+", "-", 50).Result()
+	for i := len(history) - 1; i >= 0; i-- {
+		msg := history[i].Values["msg"].(string)
+		fmt.Fprintf(res, "data: %s\n\n", msg)
+	}
 
-	ch := sub.Channel()
-
-	fmt.Fprintf(res, "data: Connected to %s\n\n", podName)
 	flusher.Flush()
+
+	lastID := "$"
+	if len(history) > 0 {
+		lastID = history[0].ID 
+	}
 
 	for {
 		select {
-		case msg := <- ch:
-			if _, err := fmt.Fprintf(res, "data: %s\n\n", msg.Payload); err != nil {
+		case <-ctx.Done():
 			return nil
-		}
-		flusher.Flush()
-		case <- ctx.Done():
-			return nil
+		default:
+			streams, err := rdb.XRead(ctx, &redis.XReadArgs{
+				Streams: []string{streamKey, lastID},
+				Block:   0,
+			}).Result()
+
+			if err != nil { continue }
+
+			for _, xmsg := range streams[0].Messages {
+				msg := xmsg.Values["msg"].(string)
+				fmt.Fprintf(res, "data: %s\n\n", msg)
+				flusher.Flush()
+				lastID = xmsg.ID
+			}
 		}
 	}
 }

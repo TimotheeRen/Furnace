@@ -49,7 +49,7 @@ func ConsoleStream(ctx context.Context, rdb *redis.Client, k8sClient kubernetes.
 			for scanner.Scan() {
 				msg := scanner.Text()
 				fmt.Printf("[%s] %s\n", pName, msg)
-				rdb.Publish(ctx, "logs:"+pName, msg)
+				rdb.XAdd(ctx, &redis.XAddArgs{Stream: "logs:" + pName, MaxLen: 1000, Approx: true, Values: map[string]interface{}{"msg": msg}})
 			}
 		}(pod.Name, stream)
 	}
