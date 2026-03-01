@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
+	"k8s.io/client-go/kubernetes"
 	metricsv "k8s.io/metrics/pkg/client/clientset/versioned"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
@@ -38,6 +39,8 @@ func main() {
 		panic(err)
 	}
 
+	k8sClientset, _ := kubernetes.NewForConfig(cfg)
+
 	metricsClient, err := metricsv.NewForConfig(cfg)
 	if err != nil {
 		fmt.Println(err)
@@ -56,6 +59,8 @@ func main() {
 			}
 		}
 	}()
+
+	go jobs.ConsoleStream(ctx, rdb, k8sClientset, metricsClient)
 
 	for {
 		task, err := rdb.BRPop(ctx, 0, "getSecret", "createServer", "getServers", "serverInfo").Result()

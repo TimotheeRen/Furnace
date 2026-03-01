@@ -71,3 +71,51 @@ func ServerInfo(c *echo.Context) error {
 	fmt.Println(res)
 	return c.Blob(http.StatusOK, "application/json", []byte(res[1]))
 }
+
+func ServerConsole(c *echo.Context) error {
+
+	redisHost := os.Getenv("REDIS_HOST")
+	if redisHost == "" {
+		redisHost = "localhost:6379"
+	}
+	rdb := redis.NewClient(&redis.Options{
+		Addr: redisHost,
+		Password: "",
+		DB: 0,
+	})
+
+	ctx := c.Request().Context()
+
+	res := c.Response()
+	res.Header().Set(echo.HeaderContentType, "text/event-stream")
+	res.Header().Set("Cache-Control", "no-cache")
+	res.Header().Set("Connection", "keep-alive")
+	res.Header().Set("X-Accel-Buffering", "no")
+
+	flusher, ok := res.(http.Flusher)
+	if !ok {
+		return c.String(http.StatusInternalServerError, "Le streaming n'est pas supporté par votre serveur")
+	}
+
+	podName := c.QueryParam("server") + "-0"
+	
+	sub := rdb.Subscribe(ctx, "logs:"+podName)
+	defer sub.Close()
+
+	ch := sub.Channel()
+
+	fmt.Fprintf(res, "data: Connected to %s\n\n", podName)
+	flusher.Flush()
+
+	for {
+		select {
+		case msg := <- ch:
+			if _, err := fmt.Fprintf(res, "data: %s\n\n", msg.Payload); err != nil {
+			return nil
+		}
+		flusher.Flush()
+		case <- ctx.Done():
+			return nil
+		}
+	}
+}
