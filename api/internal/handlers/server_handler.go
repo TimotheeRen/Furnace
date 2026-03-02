@@ -134,3 +134,26 @@ func ServerConsole(c *echo.Context) error {
 		}
 	}
 }
+
+func SendCommand(c *echo.Context) error {
+	var serverCommand dto.ServerCommand
+	if err := echo.BindQueryParams(c, &serverCommand); err != nil {
+		return c.String(http.StatusBadRequest, "")
+	}
+	redisHost := os.Getenv("REDIS_HOST")
+	if redisHost == "" {
+		redisHost = "localhost:6379"
+	}
+	rdb := redis.NewClient(&redis.Options{
+		Addr: redisHost,
+		Password: "",
+		DB: 0,
+	})
+	ctx := context.Background()
+	serverJson, err := json.Marshal(serverCommand)
+	if err != nil {
+		fmt.Println(err)
+	}
+	rdb.LPush(ctx, "command", serverJson)
+	return c.String(http.StatusOK, serverCommand.Command)
+}

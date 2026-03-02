@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -14,6 +15,10 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/kubernetes/scheme"
+	"k8s.io/client-go/rest"
+	"k8s.io/client-go/tools/remotecommand"
 	metricsv "k8s.io/metrics/pkg/client/clientset/versioned"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -219,4 +224,43 @@ func ServerInfo(ctx context.Context, rdb *redis.Client, k8sClient client.Client,
 
 	fmt.Println(serverDTO)
 	// fmt.Printf(`CPU: %dm | RAM: %dMi | CPU_MAX: %dm | RAM_MAX: %dMi | CPU_USAGE: %d%%| RAM_USAGE: %d%%| Address: %s`, cpu, mem, maxCpu, maxMem, cpuPercent, memPercent, address)
+}
+
+func Command(ctx context.Context, rdb *redis.Client, client client.Client, payload string, k8sClient kubernetes.Interface, config *rest.Config) {
+	var serverCommand dto.ServerCommand
+	if err := json.Unmarshal([]byte(payload), &serverCommand); err != nil {
+		fmt.Println(err)
+	}
+	podName := serverCommand.Server + "-0"
+	command := []string{"rcon-cli", "--password", "furnace", serverCommand.Command}
+	fmt.Println(serverCommand.Command)
+
+	req := k8sClient.CoreV1().RESTClient().Post().Resource("pods").Name(podName).Namespace("servers").SubResource("exec")
+
+	option := &corev1.PodExecOptions{
+		Command: command,
+		Stdin: false,
+		Stdout: true,
+		Stderr: true,
+		TTY: false,
+	}
+
+	req.VersionedParams(option, scheme.ParameterCodec)
+
+	exec, err := remotecommand.NewSPDYExecutor(config, "POST", req.URL())
+	if err != nil {
+		fmt.Println("Exec error: ", err)
+		return
+	}
+	
+	var stdout, stderr bytes.Buffer
+	err = exec.StreamWithContext(ctx, remotecommand.StreamOptions{
+		Stdout: &stdout,
+		Stderr: &stderr,
+	})
+	
+	if err != nil {
+		fmt.Printf("Stream Error: %v | Stderr: %s\n", err, stderr.String())
+	}
+	fmt.Println("Response from MC:", stdout.String())
 }

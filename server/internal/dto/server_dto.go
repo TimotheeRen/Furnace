@@ -40,3 +40,8 @@ type ServerMetric struct {
 	Ram int `json:"ram"`
 	Players int `json:"players"`
 }
+
+type ServerCommand struct {
+	Server string `json:"server"`
+	Command string `json:"command"`
+}

@@ -1,7 +1,7 @@
 import ConsoleContent from "@/components/clients/ConsoleContent";
+import ConsoleInput from "@/components/clients/ConsoleInput";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { ChevronRight, Send, Terminal } from "lucide-react";
+import { Terminal } from "lucide-react";
 
 interface PageProps {
   params: Promise<{ server: string }>
@@ -20,11 +20,7 @@ export default async function ServerDashboard({params}: PageProps) {
         </CardHeader>
         <CardContent className="flex-1 min-h-0 p-4 bg-zinc-950 rounded-md border">
           <ConsoleContent server={server}/>
-          <div className="flex items-center gap-2">
-            <ChevronRight color="lime"/>
-            <Input placeholder="Enter a command..." className="border-none bg-transparent! shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"/>
-            <Send color="grey"/>
-          </div>
+          <ConsoleInput server={server}/>
         </CardContent>
       </Card>
     </div>

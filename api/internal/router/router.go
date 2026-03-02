@@ -13,4 +13,5 @@ func Router(e *echo.Echo, logged *echo.Group) {
 	logged.GET("/getServers", handlers.GetServers)
 	logged.GET("/serverInfo", handlers.ServerInfo)
 	logged.GET("/console", handlers.ServerConsole)
+	logged.POST("/command", handlers.SendCommand)
 }

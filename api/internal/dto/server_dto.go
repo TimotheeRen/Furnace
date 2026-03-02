@@ -10,3 +10,8 @@ type ServerDTO struct {
 	MaxCpu string `query:"maxCpu"`
 	Storage string `query:"storage"`
 }
+
+type ServerCommand struct {
+	Server string `query:"server" json:"server"`
+	Command string `query:"command" json:"command"`
+}
