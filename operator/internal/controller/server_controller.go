@@ -187,6 +187,48 @@ func (r *ServerReconciler) defineStatefulSet(server *furnacecomv1.Server) *appsv
 								},
 							},
 						},
+						{
+							Name:  "sftp-sidecar",
+							Image: "atmoz/sftp:alpine-3.7",
+							Args:  []string{"$(SFTP_USERNAME):$(SFTP_PASSWORD):1000:1000"},
+							Env: []corev1.EnvVar{
+								{
+									Name: "SFTP_PASSWORD",
+									ValueFrom: &corev1.EnvVarSource{
+										SecretKeyRef: &corev1.SecretKeySelector{
+											LocalObjectReference: corev1.LocalObjectReference{
+												Name: "sftp-credentials",
+											},
+											Key: "password",
+										},
+									},
+								},
+								{
+									Name: "SFTP_USERNAME",
+									ValueFrom: &corev1.EnvVarSource{
+										SecretKeyRef: &corev1.SecretKeySelector{
+											LocalObjectReference: corev1.LocalObjectReference{
+												Name: "sftp-credentials",
+											},
+											Key: "username",
+										},
+									},
+								},
+							},
+							Ports: []corev1.ContainerPort{
+								{
+									Name:          "sftp",
+									ContainerPort: 22,
+									Protocol:      corev1.ProtocolTCP,
+								},
+							},
+							VolumeMounts: []corev1.VolumeMount{
+								{
+									Name:      "server-data",
+									MountPath: "/home/admin/upload",
+								},
+							},
+						},
 					},
 				},
 			},
@@ -225,8 +267,16 @@ func (r *ServerReconciler) defineService(server *furnacecomv1.Server) *corev1.Se
 			Selector: map[string]string{"app": server.Name},
 			Ports: []corev1.ServicePort{
 				{
+					Name:       "minecraft",
+					Protocol:   corev1.ProtocolTCP,
 					Port:       25565,
 					TargetPort: intstr.FromInt(25565),
+				},
+				{
+					Name:       "sftp",
+					Protocol:   corev1.ProtocolTCP,
+					Port:       22,
+					TargetPort: intstr.FromInt(22),
 				},
 			},
 			Type: corev1.ServiceTypeNodePort,
