@@ -7,11 +7,7 @@ from diagrams.k8s.network import Service
 from diagrams.k8s.compute import StatefulSet, Pod
 from diagrams.k8s.storage import PV, PVC
 
-graph_attr = {
-    "bgcolor": "transparent",
-}
-
-with Diagram(outformat="svg"):
+with Diagram():
     with Cluster("CRs"):
         crs = [CRD("Server 1"),
                CRD("Server 2"),

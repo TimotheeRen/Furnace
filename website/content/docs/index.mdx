@@ -1,13 +1,16 @@
 ---
-title: Hello World
-description: Your first document
+title: Architecture
+description: Furnace Architecture overview
 ---
 
-Welcome to the docs! You can start writing documents in `/content/docs`.
+# Architecture overview
 
-## What is Next?
+![Architecture diagram](/diagrams_image.png)
 
-<Cards>
-  <Card title="Learn more about Next.js" href="https://nextjs.org/docs" />
-  <Card title="Learn more about Fumadocs" href="https://fumadocs.dev" />
-</Cards>
+Furnace project contain the following microservices:
+
+- The UI: A Nextjs web user interface, handle API calls in a reactive interface.
+- The API: An Echo REST API that handle API calls from the front-end.
+- The Message Broker: A redis service that serve both as a message broker and a metric storage.
+- The Controller/Server: Handle redis messages and create the servers CRs, and monitor them. It runs with elevated cluster permissions and periodically scrap metrics from servers pods to store them in redis.
+- The Kubernetes Operator: Watch and convert the created CRs into services and statefulsets and automatically reconsile CRs state.
