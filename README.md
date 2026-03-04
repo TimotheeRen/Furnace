@@ -34,8 +34,8 @@ Furnace project contain the following microservices:
 # Features ✨
 
 - [x] Servers creation
-- [x] Metrics collections
+- [x] Metrics collection
 - [x] A reactive console
-- [ ] A file explorer
+- [x] An SFTP server for each pod
 - [ ] Interface configuration
 - [ ] Logs
