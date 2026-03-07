@@ -47,9 +47,14 @@ func ConsoleStream(ctx context.Context, rdb *redis.Client, k8sClient kubernetes.
 				}
 				go func(pName string, s io.ReadCloser) {
 					if s == nil {
+						activeStreams[pName] = false
 						return
 					}
-					defer s.Close()
+					defer func() {
+						s.Close()
+						activeStreams[pName] = false
+						fmt.Printf("Stream stopped for pod %s\n", pName)
+					}()
 					scanner := bufio.NewScanner(s)
 					for scanner.Scan() {
 						msg := scanner.Text()

@@ -238,6 +238,7 @@ func Command(ctx context.Context, rdb *redis.Client, client client.Client, paylo
 	req := k8sClient.CoreV1().RESTClient().Post().Resource("pods").Name(podName).Namespace("servers").SubResource("exec")
 
 	option := &corev1.PodExecOptions{
+		Container: "server-container",
 		Command: command,
 		Stdin: false,
 		Stdout: true,
