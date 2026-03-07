@@ -264,3 +264,31 @@ func Command(ctx context.Context, rdb *redis.Client, client client.Client, paylo
 	}
 	fmt.Println("Response from MC:", stdout.String())
 }
+
+func GetSftpPort(ctx context.Context, rdb *redis.Client, k8sClient client.Client, payload string) {
+	svc := &corev1.Service{}
+	err := k8sClient.Get(ctx, client.ObjectKey{Name: payload+"-svc", Namespace: "servers"}, svc)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	var nodePort int32
+	for _, p := range svc.Spec.Ports {
+		if p.Port == 22 {
+			nodePort = p.NodePort
+		}
+	}
+
+	nodeList := &corev1.NodeList{}
+	if err := k8sClient.List(ctx, nodeList); err != nil {
+		fmt.Println(err)
+	}
+
+	nodeIP := nodeList.Items[0].Status.Addresses[0].Address
+	address := fmt.Sprintf("%s:%d", nodeIP, nodePort)
+
+	rdb.LPush(ctx, "getSftpPortResponse", address)
+	rdb.Expire(ctx, "getSftpPortResponse", 3*time.Second)
+
+	fmt.Println(address)
+}

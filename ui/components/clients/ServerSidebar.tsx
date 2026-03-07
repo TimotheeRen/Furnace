@@ -1,6 +1,6 @@
 "use client"
 
-import { Box, FileSliders, Folder, Gauge, Github, House, LayoutDashboard, Logs, SquareTerminal } from "lucide-react";
+import { Box, CalendarCog, DatabaseBackup, FileSliders, Folder, Gauge, Github, House, LayoutDashboard, Logs, SquareTerminal } from "lucide-react";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
 import { SelectItem, SelectTrigger, SelectValue, Select, SelectContent, SelectGroup } from "../ui/select";
 import Link from "next/link";
@@ -47,14 +47,6 @@ export default function ServerSidebar({ server }: ServerSidebarProps) {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href={`/dashboard/${server}/config`}>
-                    <FileSliders />
-                    <span>Configuration</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
                   <Link href={`/dashboard/${server}/files`}>
                     <Folder />
                     <span>Files</span>
@@ -64,16 +56,16 @@ export default function ServerSidebar({ server }: ServerSidebarProps) {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <Link href={`/dashboard/${server}/metrics`}>
-                    <Gauge />
-                    <span>Metrics</span>
+                    <CalendarCog />
+                    <span>Jobs</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <Link href={`/dashboard/${server}/logs`}>
-                    <Logs />
-                    <span>Logs</span>
+                    <DatabaseBackup  />
+                    <span>Backup</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
