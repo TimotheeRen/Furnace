@@ -1,6 +1,6 @@
 "use client"
 
-import { Box, CalendarCog, DatabaseBackup, FileSliders, Folder, Gauge, Github, House, LayoutDashboard, Logs, SquareTerminal } from "lucide-react";
+import { BookOpen, Box, CalendarCog, DatabaseBackup, FileSliders, Folder, Gauge, Github, House, LayoutDashboard, Logs, MoveUpRight, SquareTerminal } from "lucide-react";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
 import { SelectItem, SelectTrigger, SelectValue, Select, SelectContent, SelectGroup } from "../ui/select";
 import Link from "next/link";
@@ -55,17 +55,18 @@ export default function ServerSidebar({ server }: ServerSidebarProps) {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href={`/dashboard/${server}/metrics`}>
+                  <Link href={`/dashboard/${server}/cronjobs`}>
                     <CalendarCog />
-                    <span>Jobs</span>
+                    <span>Cronjobs</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href={`/dashboard/${server}/logs`}>
-                    <DatabaseBackup  />
-                    <span>Backup</span>
+                  <Link href={`https://furnace-host.vercel.app/docs`}>
+                    <BookOpen />
+                    <span>Documentation</span>
+                    <MoveUpRight/>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

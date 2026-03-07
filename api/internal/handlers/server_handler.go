@@ -179,3 +179,26 @@ func GetSftpPort(c *echo.Context) error {
 	fmt.Println(res[1])
 	return c.String(http.StatusOK, res[1])
 }
+
+func GetCronjobs(c *echo.Context) error {
+	server := c.QueryParam("server")
+	redisHost := os.Getenv("REDIS_HOST")
+	if redisHost == "" {
+		redisHost = "localhost:6379"
+	}
+	rdb := redis.NewClient(&redis.Options{
+		Addr: redisHost,
+		Password: "",
+		DB: 0,
+	})
+	ctx := context.Background()
+	rdb.LPush(ctx, "getCronjobs", server) 
+	res, err := rdb.BRPop(ctx, 10*time.Second, "getCronjobsResponse").Result()
+	if err != nil {
+		fmt.Println(err)
+		return c.String(http.StatusInternalServerError, "Error")
+	}
+
+	fmt.Println(res[1])
+	return c.String(http.StatusOK, res[1])
+}

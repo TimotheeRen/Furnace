@@ -63,7 +63,7 @@ func main() {
 	go jobs.ConsoleStream(ctx, rdb, k8sClientset, metricsClient)
 
 	for {
-		task, err := rdb.BRPop(ctx, 0, "getSecret", "createServer", "getServers", "serverInfo", "command", "getSftpPort").Result()
+		task, err := rdb.BRPop(ctx, 0, "getSecret", "createServer", "getServers", "serverInfo", "command", "getSftpPort", "getCronjobs").Result()
 		if err != nil {
 			fmt.Printf("Erreur Redis: %v. Nouvel essai dans 5s...\n", err)
             time.Sleep(5 * time.Second)
@@ -82,6 +82,8 @@ func main() {
 				handlers.Command(ctx, rdb, client, task[1], k8sClientset, cfg)
 			case "getSftpPort":
 				handlers.GetSftpPort(ctx, rdb, client, task[1])
+			case "getCronjobs":
+				handlers.GetCronjobs(ctx, rdb, client, task[1], k8sClientset, cfg)
 		}
 	}
 }
