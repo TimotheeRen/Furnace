@@ -23,7 +23,7 @@ export default async function Files({params}: PageProps) {
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
         <p>First, make sure had installed an sftp client. Then you can access the server on <Kbd>{sftpAddress}</Kbd>.</p>
-        <CodeBlock language="bash" filename="" code={`sftp [username]@${sftpAddress}`}></CodeBlock>
+        <CodeBlock language="bash" filename="" code={`sftp sftp://admin@${sftpAddress}`}></CodeBlock>
         <p>You can get your username with the following command:</p>
         <CodeBlock language="bash" filename="" code="kubectl get secret furnace-credentials -o jsonpath='{.data.username}' | base64 --decode "></CodeBlock>
         <p>You can get your password with the following command:</p>
