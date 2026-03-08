@@ -1,0 +1,27 @@
+---
+title: Frontend
+description: Furnace Architecture Decision Record
+---
+
+# Frontend Architecture Decision Record
+
+## Golang as the backend solution
+
+### Requirement
+
+- Need to be support fluent refresh and reactivity for the dashboard.
+
+### Option 1: Nextjs
+
+- [x] Convenient to use
+- [x] Natively support fluent routing
+- [ ] Average resource consumption
+
+### Option 2: Only React
+
+- [x] Low resource consumption
+- [ ] Need a lot of manual configuration to get a convinent result
+
+### Decision: Nextjs
+
+Mostly because of Nextjs "ready-to-go" features that avoid spending too much time building the frontend

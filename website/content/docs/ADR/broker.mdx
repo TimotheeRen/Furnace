@@ -1,0 +1,32 @@
+---
+title: Message Broker
+description: Furnace Message Broker Architecture Decision Record
+---
+
+# Message Broker Architecture Decision Record
+
+## Redis a the message broker and database
+
+### Requirement
+
+- Need to be lightweight
+- Need to have low latency
+- If possible, with a message queue system
+
+### Option 1: Redis
+
+- [x] Convenient to use
+- [x] Very Lightweight
+- [x] Easy to debug
+- [x] Have a queue system
+- [ ] Can make the overall infrastructure more complex to maintain
+
+### Option 2: gRPC
+
+- [x] Almost no resource consomption
+- [x] No queue system
+- [ ] Hard to debug
+
+### Decision: Redis
+
+Because of it's ease of debug and it's queue system.

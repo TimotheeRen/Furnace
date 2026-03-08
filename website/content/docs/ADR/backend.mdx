@@ -1,0 +1,32 @@
+---
+title: Backend
+description: Furnace Architecture Decision Record
+---
+
+# Backend Architecture Decision Record
+
+## Golang as the backend solution
+
+### Requirement
+
+- Need to interact natively with K8s
+- Need to have a low resource consumption
+- Need to support web requests, authentification, k8s communication, and redis
+
+### Option 1: Java (with Spring Boot)
+
+- [x] Easy and fast to write
+- [x] Great ecosystem
+- [ ] High resource consumption
+- [ ] No native K8s integration
+
+
+### Option 2: Go
+
+- [x] Native K8s integreation
+- [x] Low resource consumption
+- [ ] Very verbose
+
+### Decision: Go
+
+Mostly because of performances and low resource consumption
