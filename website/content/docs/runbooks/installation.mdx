@@ -1,0 +1,23 @@
+---
+title: Installation
+description: How to install furnace locally
+---
+
+# Installation
+## Clone the git repository
+```bash
+    git clone https://github.com/TimotheeRen/Furnace.git
+```
+## Init the Cluster (with k3d)
+```bash
+	k3d cluster create --config Furnace/k3d/dev-env.yaml
+```
+## Install the Helm Chart
+```bash
+	helm upgrade --install furnace Furnace/chart/ --wait
+```
+
+## Port forward (if running the cluster locally)
+```bash
+	kubectl port-forward svc/ui-service 8080:80
+```

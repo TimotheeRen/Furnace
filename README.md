@@ -26,7 +26,7 @@ Furnace project contain the following microservices:
 	helm upgrade --install furnace chart/ --wait
 ```
 
-## Port forward (if running the cluster localy)
+## Port forward (if running the cluster locally)
 ```bash
 	kubectl port-forward svc/ui-service 8080:80
 ```
