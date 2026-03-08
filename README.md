@@ -1,7 +1,7 @@
 # Furnace
 A Kubernetes based Minecraft servers hosting solution.
 
-![Dashboard screenshot](/website/public/dashboard.png)
+![Dashboard screenshot](/website/public/dashboard_presentation.png)
 
 It provide a production ready Helm Chart, with every services ready to use. Furnace is design for hight availability on-premise servers, by providing an easy to use plateform that abstract all the complexity of Minecraft servers management.
 
