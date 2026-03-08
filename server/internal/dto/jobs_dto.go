@@ -18,3 +18,8 @@ type NewCronjobsDTO struct {
 	Command string `json:"command"`
 	Server string `json:"server"`
 }
+
+type Cronjobs struct {
+	Server string `json:"server" query:"server"`
+	Command string `json:"command" query:"command"`
+}

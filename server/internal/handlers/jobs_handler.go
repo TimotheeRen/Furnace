@@ -6,7 +6,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"k8s.io/apimachinery/pkg/types" // <--- Ajoute ça
+	"k8s.io/apimachinery/pkg/types"
 	"server/internal/dto"
 	"strings"
 	"time"
@@ -138,29 +138,49 @@ func CreateCronjob(ctx context.Context, rdb *redis.Client, client client.Client,
         return
     }
 
-	var jobs []dto.CronjobsDTO
-	output := stdout.String()
-	scanner := bufio.NewScanner(strings.NewReader(output))
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-		if strings.Contains(line, "rcon-cli") {
-			parts := strings.Fields(line)
-			if len(parts) >= 6 {
-				job := dto.CronjobsDTO{
-					Minute:  parts[0],
-					Hour:    parts[1],
-					Day:     parts[2],
-					Month:   parts[3],
-					Week:    parts[4],
-					Command: strings.Join(parts[5:], " "),
-				}
-				jobs = append(jobs, job)
-			}
-		}
-	}
-	fmt.Println(jobs)
-    fmt.Println("Cronjobs:", jobs)
-
 	rdb.LPush(ctx, "createCronjobResponse", "OK")
 	rdb.Expire(ctx, "createCronjobResponse", 3*time.Second)
+}
+
+func DeleteCronjob(ctx context.Context, rdb *redis.Client, client client.Client, payload string, k8sClient kubernetes.Interface, config *rest.Config) {
+
+	var cronjob dto.Cronjobs
+	if err := json.Unmarshal([]byte(payload), &cronjob); err != nil {
+		fmt.Println(err)
+	}
+	podName := cronjob.Server + "-0"
+	fmt.Println(cronjob.Command)
+	command := []string{"sh", "-c", fmt.Sprintf(`crontab -l 2>/dev/null | grep -vF "%s" | crontab -`, cronjob.Command)}
+
+    req := k8sClient.CoreV1().RESTClient().Post().
+        Resource("pods").
+        Namespace("servers").
+        Name(podName).
+        SubResource("exec").
+        Param("container", "server-container").
+        Param("stdout", "true").
+        Param("stderr", "true").
+        Param("stdin", "false").
+        Param("tty", "false")
+
+    for _, c := range command {
+        req.Param("command", c)
+    }
+
+    exec, err := remotecommand.NewSPDYExecutor(config, "POST", req.URL())
+    if err != nil { return }
+    
+    var stdout, stderr bytes.Buffer
+    err = exec.StreamWithContext(ctx, remotecommand.StreamOptions{
+        Stdout: &stdout,
+        Stderr: &stderr,
+    })
+    
+    if err != nil {
+        fmt.Printf("Erreur: %v | Stderr: %s\n", err, stderr.String())
+        return
+    }
+
+	rdb.LPush(ctx, "deleteCronjobResponse", "OK")
+	rdb.Expire(ctx, "deleteCronjobResponse", 3*time.Second)
 }

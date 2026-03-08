@@ -17,4 +17,5 @@ func Router(e *echo.Echo, logged *echo.Group) {
 	logged.GET("/getSftpPort", handlers.GetSftpPort)
 	logged.GET("/getCronjobs", handlers.GetCronjobs)
 	logged.POST("/createCronjob", handlers.CreateCronjob)
+	logged.POST("/deleteCronjob", handlers.DeleteCronjob)
 }

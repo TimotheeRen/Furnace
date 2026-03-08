@@ -63,7 +63,7 @@ func main() {
 	go jobs.ConsoleStream(ctx, rdb, k8sClientset, metricsClient)
 
 	for {
-		task, err := rdb.BRPop(ctx, 0, "getSecret", "createServer", "getServers", "serverInfo", "command", "getSftpPort", "getCronjobs", "createCronjob").Result()
+		task, err := rdb.BRPop(ctx, 0, "getSecret", "createServer", "getServers", "serverInfo", "command", "getSftpPort", "getCronjobs", "createCronjob", "deleteCronjob").Result()
 		if err != nil {
 			fmt.Printf("Erreur Redis: %v. Nouvel essai dans 5s...\n", err)
             time.Sleep(5 * time.Second)
@@ -86,6 +86,8 @@ func main() {
 				handlers.GetCronjobs(ctx, rdb, client, task[1], k8sClientset, cfg)
 			case "createCronjob":
 				handlers.CreateCronjob(ctx, rdb, client, task[1], k8sClientset, cfg)
+			case "deleteCronjob":
+				handlers.DeleteCronjob(ctx, rdb, client, task[1], k8sClientset, cfg)
 		}
 	}
 }

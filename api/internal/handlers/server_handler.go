@@ -229,3 +229,32 @@ func CreateCronjob(c *echo.Context) error {
 	fmt.Println(res[1])
 	return c.String(http.StatusOK, "OK")
 }
+
+func DeleteCronjob(c *echo.Context) error {
+	var cronjob dto.Cronjobs
+	if err := echo.BindQueryParams(c, &cronjob); err != nil {
+		return c.String(http.StatusBadRequest, "")
+	}
+	redisHost := os.Getenv("REDIS_HOST")
+	if redisHost == "" {
+		redisHost = "localhost:6379"
+	}
+	rdb := redis.NewClient(&redis.Options{
+		Addr: redisHost,
+		Password: "",
+		DB: 0,
+	})
+	ctx := context.Background()
+	cronjobJson, err := json.Marshal(cronjob)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "Bad request")
+	}
+	rdb.LPush(ctx, "deleteCronjob", cronjobJson) 
+	res, err := rdb.BRPop(ctx, 10*time.Second, "deleteCronjobResponse").Result()
+	if err != nil {
+		fmt.Println(err)
+		return c.String(http.StatusInternalServerError, "Error")
+	}
+	fmt.Println(res[1])
+	return c.String(http.StatusOK, "OK")
+}

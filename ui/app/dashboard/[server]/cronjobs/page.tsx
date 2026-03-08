@@ -1,4 +1,5 @@
 import { CreateCronjobDialog } from "@/components/clients/CreateCronjobDialog"
+import DeleteCronjobButton from "@/components/clients/DeleteCronjobButton"
 import { getCronjobs } from "@/components/rsc/getCronjobs"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -61,9 +62,7 @@ export default async function Cronjobs({params}: PageProps) {
                 <ItemDescription>{c.minute+" "+c.hour+" "+c.day+" "+c.month+" "+c.week}</ItemDescription>
               </ItemContent>
               <ItemActions>
-              <Button variant="link" className="cursor-pointer hover:text-red-500">
-                <Trash2 />
-              </Button>
+                <DeleteCronjobButton server={server} command={c.command}/>
               </ItemActions>
             </Item>
           ))}
