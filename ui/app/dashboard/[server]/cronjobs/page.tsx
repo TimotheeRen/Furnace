@@ -1,3 +1,4 @@
+import { CreateCronjobDialog } from "@/components/clients/CreateCronjobDialog"
 import { getCronjobs } from "@/components/rsc/getCronjobs"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -42,10 +43,7 @@ export default async function Cronjobs({params}: PageProps) {
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
-          <Button variant="outline">
-            <Plus/>
-            Create cronjob
-          </Button>
+          <CreateCronjobDialog server={server}/>
         </EmptyContent>
       </Empty>
     )}
@@ -54,8 +52,7 @@ export default async function Cronjobs({params}: PageProps) {
         <h1>Cronjobs</h1>
         <div className="flex flex-col gap-2 my-3">
           {cronjobs.map((c: Cronjob) => (
-            <Link href={`/dashboard/`} key={c.command}>
-            <Item variant="outline" className="w-100 hover:bg-zinc-900" >
+            <Item variant="outline" className="sm:w-[500px] lg:w-[800px] w-100" key={c.command}>
               <ItemMedia>
                 <CalendarCog />
               </ItemMedia>
@@ -64,16 +61,14 @@ export default async function Cronjobs({params}: PageProps) {
                 <ItemDescription>{c.minute+" "+c.hour+" "+c.day+" "+c.month+" "+c.week}</ItemDescription>
               </ItemContent>
               <ItemActions>
-                <Trash2/>
+              <Button variant="link" className="cursor-pointer hover:text-red-500">
+                <Trash2 />
+              </Button>
               </ItemActions>
             </Item>
-            </Link>
           ))}
         </div>
-          <Button variant="outline">
-            <Plus/>
-            Create cronjob
-          </Button>
+        <CreateCronjobDialog server={server}/>
       </div>
     )}
     </div>

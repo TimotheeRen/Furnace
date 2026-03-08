@@ -27,7 +27,7 @@ export default function ResourcesChart({ data }: { data: ResourceMetric[] }) {
   <Card>
     <CardHeader>
       <CardTitle>Resources Usage</CardTitle>
-      <CardDescription>Showing RAM and CPU usage of the server</CardDescription>
+      <CardDescription>Showing RAM and CPU usage of the server (%)</CardDescription>
     </CardHeader>
     <CardContent>
       <ChartContainer config={resourcesConfig}>

@@ -17,7 +17,7 @@ export default function PlayersChart({ data }: { data: any[] }) {
   <Card>
     <CardHeader>
       <CardTitle>Players online</CardTitle>
-      <CardDescription>Showing players online on the server</CardDescription>
+      <CardDescription>Showing players online on the server (%)</CardDescription>
     </CardHeader>
     <CardContent>
       <ChartContainer config={resourcesConfig}>

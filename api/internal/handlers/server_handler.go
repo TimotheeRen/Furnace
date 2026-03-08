@@ -16,7 +16,7 @@ import (
 func CreateServer(c *echo.Context) error {
 	var server dto.ServerDTO
 	if err := echo.BindQueryParams(c, &server); err != nil {
-		return c.String(http.StatusBadRequest, "Donnees invalides.")
+		return c.String(http.StatusBadRequest, "Invalid data.")
 	}
 
 	redisHost := os.Getenv("REDIS_HOST")
@@ -201,4 +201,31 @@ func GetCronjobs(c *echo.Context) error {
 
 	fmt.Println(res[1])
 	return c.String(http.StatusOK, res[1])
+}
+
+func CreateCronjob(c *echo.Context) error {
+	var cronjob dto.NewCronjobsDTO
+	if err := echo.BindQueryParams(c, &cronjob); err != nil {
+		return c.String(http.StatusBadRequest, "Invalid data.")
+	}
+
+	redisHost := os.Getenv("REDIS_HOST")
+	if redisHost == "" {
+		redisHost = "localhost:6379"
+	}
+	rdb := redis.NewClient(&redis.Options{
+		Addr: redisHost,
+		Password: "",
+		DB: 0,
+	})
+	ctx := context.Background()
+	payload, _ := json.Marshal(cronjob)
+	rdb.LPush(ctx, "createCronjob", payload)
+	res, err := rdb.BRPop(ctx, 10*time.Second, "createCronjobResponse").Result()
+	if err != nil {
+		fmt.Println(err)
+		return c.String(http.StatusInternalServerError, "Error")
+	}
+	fmt.Println(res[1])
+	return c.String(http.StatusOK, "OK")
 }
