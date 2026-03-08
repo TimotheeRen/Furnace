@@ -36,6 +36,5 @@ Furnace project contain the following microservices:
 - [x] Servers creation
 - [x] Metrics collection
 - [x] A reactive console
-- [x] An SFTP server for each pod
-- [ ] Interface configuration
-- [ ] Logs
+- [x] An SFTP server for each pod (CI/CD compatibility)
+- [x] Cronjobs
